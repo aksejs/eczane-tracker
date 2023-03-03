@@ -8,13 +8,13 @@ import styles from './styles.module.css'
 
 export const AddressField: React.FC<any> = () => {
   const [address, setAddress] = useState()
-  const { location } = useGeolocation()
+  const { currentLocation } = useGeolocation()
 
   useEffect(() => {
-    if (location) {
+    if (currentLocation) {
       Geocode.fromLatLng(
-        location.coords.latitude.toString(),
-        location.coords.longitude.toString()
+        currentLocation.coords.latitude.toString(),
+        currentLocation.coords.longitude.toString()
       ).then(
         (response) => {
           const address = response.results[0].formatted_address
@@ -25,7 +25,7 @@ export const AddressField: React.FC<any> = () => {
         }
       )
     }
-  }, [location])
+  }, [currentLocation])
 
   return (
     <div className={styles.container}>

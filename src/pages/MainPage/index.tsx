@@ -1,37 +1,12 @@
-import React, {
-  FunctionComponent,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
-import Geocode from 'react-geocode'
+import React, { FunctionComponent, useContext } from 'react'
 
 import { Button, Map } from '../../components'
 import { AddressContext } from '../../utils/AddressContext'
-import { useGeolocation } from '../../utils/hooks'
 
 import styles from './styles.module.css'
 
 export const MainPage: FunctionComponent = () => {
-  const { address, setAddress } = useContext(AddressContext)
-  const { location } = useGeolocation()
-
-  useEffect(() => {
-    if (location) {
-      Geocode.fromLatLng(
-        location.coords.latitude.toString(),
-        location.coords.longitude.toString()
-      ).then(
-        (response) => {
-          const address = response.results[0].formatted_address
-          setAddress(address)
-        },
-        (error) => {
-          console.error(error)
-        }
-      )
-    }
-  }, [location])
+  const { address, location } = useContext(AddressContext)
 
   const renderAddress = () => {
     if (!address) {
@@ -56,9 +31,7 @@ export const MainPage: FunctionComponent = () => {
       return React.Fragment
     }
 
-    return (
-      <Map lat={location.coords.latitude} lng={location.coords.longitude} />
-    )
+    return <Map lat={location.lat} lng={location.lng} />
   }
 
   return (

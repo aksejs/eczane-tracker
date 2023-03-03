@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import browserStorage from 'store'
 
 interface UseGeolocation {
-  location?: GeolocationPosition
+  currentLocation?: GeolocationPosition
   isDisabled: boolean
 }
 
@@ -20,7 +20,7 @@ export function useGeolocation(): UseGeolocation {
   }, [])
 
   return {
-    location: location,
+    currentLocation: location,
     isDisabled: isError,
   }
 }
