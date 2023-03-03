@@ -8,7 +8,7 @@ export const Map: React.FC<{
   lat: number
   lng: number
   zoom?: number
-}> = ({ lat, lng, zoom = 14 }) => {
+}> = ({ lat, lng, zoom = 16 }) => {
   return (
     // Important! Always set the container height explicitly
     <div style={{ height: '40vh', width: '100%' }}>
