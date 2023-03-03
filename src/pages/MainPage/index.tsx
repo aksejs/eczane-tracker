@@ -1,13 +1,19 @@
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, {
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import Geocode from 'react-geocode'
 
 import { Button, Map } from '../../components'
+import { AddressContext } from '../../utils/AddressContext'
 import { useGeolocation } from '../../utils/hooks'
 
 import styles from './styles.module.css'
 
 export const MainPage: FunctionComponent = () => {
-  const [address, setAddress] = useState()
+  const { address, setAddress } = useContext(AddressContext)
   const { location } = useGeolocation()
 
   useEffect(() => {
@@ -35,7 +41,7 @@ export const MainPage: FunctionComponent = () => {
     return (
       <div className={styles.container}>
         <p className={styles.addressTitle}>
-          Your address is: <strong>~{address}</strong> ?
+          Is it your address: <strong>{address}</strong> ?
         </p>
         <div className={styles.buttonsWrapper}>
           <Button>Yes</Button>

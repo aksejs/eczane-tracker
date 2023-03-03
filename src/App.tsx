@@ -2,11 +2,14 @@ import React from 'react'
 import { MainPage } from './pages'
 
 import './App.css'
+import { AddressContextProvider } from './utils/AddressContext'
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <MainPage />
+      <AddressContextProvider>
+        <MainPage />
+      </AddressContextProvider>
     </div>
   )
 }

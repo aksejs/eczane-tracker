@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import browserStorage from 'store'
 
 interface UseGeolocation {
   location?: GeolocationPosition
@@ -22,4 +23,23 @@ export function useGeolocation(): UseGeolocation {
     location: location,
     isDisabled: isError,
   }
+}
+
+export const usePersistStore = (storageKey: string, initialState: any) => {
+  const [state, setInternalState] = useState(initialState)
+
+  useEffect(() => {
+    const storageInBrowser = browserStorage.get(storageKey)
+
+    if (storageInBrowser) {
+      setInternalState(storageInBrowser)
+    }
+  }, [])
+
+  const setState = (newState: any) => {
+    browserStorage.set(storageKey, newState)
+    setInternalState(newState)
+  }
+
+  return [state, setState]
 }
