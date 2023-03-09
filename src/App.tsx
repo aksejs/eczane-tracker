@@ -1,15 +1,21 @@
 import React from 'react'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+
 import { MainPage } from './pages'
 
 import './App.css'
 import { AddressContextProvider } from './utils/AddressContext'
 
+const queryClient = new QueryClient()
+
 const App: React.FC = () => {
   return (
     <div className="App">
-      <AddressContextProvider>
-        <MainPage />
-      </AddressContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <AddressContextProvider>
+          <MainPage />
+        </AddressContextProvider>
+      </QueryClientProvider>
     </div>
   )
 }

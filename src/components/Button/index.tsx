@@ -6,7 +6,7 @@ export const Button: React.FC<{
   children: React.ReactNode
   disabled?: boolean
   loading?: boolean
-  onClick?: (e: React.MouseEvent<HTMLElement>) => any
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void
 }> = ({ children, ...props }) => (
   <button className={styles.buttonPrimary} {...props}>
     {children}

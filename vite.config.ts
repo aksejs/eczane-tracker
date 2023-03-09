@@ -10,4 +10,13 @@ export default defineConfig({
       registerType: 'autoUpdate',
     }),
   ],
+  server: {
+    proxy: {
+      "/place-api": {
+        target: "https://maps.googleapis.com/maps/api/place/autocomplete/json",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/place-api/, ''),
+      }
+    }
+  }
 })
