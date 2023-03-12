@@ -21,15 +21,15 @@
   box-shadow: none;
   padding: 8px 12px;
   height: auto;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #3f51b5;
+  }
 }
 
 .addressField {
   flex-grow: 1;
   margin-right: 12px;
-}
-
-.addressInput:focus {
-  outline: none;
-  box-shadow: none;
-  border-color: #3f51b5;
 }
