@@ -15,8 +15,11 @@ import styles from './styles.module.css'
 import { GOOGLE_API_KEY } from '../../common/contants'
 import { Prediction } from '@/common/types'
 
-const AddressInput: React.FC<any> = () => {
+const AddressInput: React.FC<{ defaultValue?: string }> = ({
+  defaultValue,
+}) => {
   const [predictions, setPredictions] = useState<Prediction[]>()
+  const [value, setValue] = useState<string>(defaultValue || '')
 
   const search = async (value: string) => {
     const {
@@ -38,18 +41,24 @@ const AddressInput: React.FC<any> = () => {
   ).current
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value)
     debouncedSearch(e.target.value)
   }
 
   const renderPredictions = () => {
-    if (!predictions) {
+    if (!predictions?.length) {
       return <React.Fragment />
     }
 
     return (
       <div>
         {predictions.map((prediction) => (
-          <div key={prediction.place_id}>{prediction.description}</div>
+          <div
+            onClick={() => setValue(prediction.description)}
+            key={prediction.place_id}
+          >
+            {prediction.description}
+          </div>
         ))}
       </div>
     )
@@ -61,6 +70,8 @@ const AddressInput: React.FC<any> = () => {
         <div className={styles.addressField}>
           <label>Your Address</label>
           <input
+            onFocus={(e) => e.target.select()}
+            value={value}
             onChange={handleChange}
             type="text"
             className={styles.addressInput}
@@ -115,7 +126,7 @@ export const MainPage: FunctionComponent = () => {
     <div className="App">
       <>
         {renderAddress()}
-        {isManually && <AddressInput />}
+        <AddressInput defaultValue={address} />
         {renderMap()}
       </>
     </div>
