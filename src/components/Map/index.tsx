@@ -1,6 +1,6 @@
 import React from 'react'
 import GoogleMapReact from 'google-map-react'
-import { GOOGLE_API_KEY } from '../../utils/contants'
+import { GOOGLE_API_KEY } from '../../common/contants'
 
 const AnyReactComponent: React.FC<any> = ({ text }) => <div>{text}</div>
 

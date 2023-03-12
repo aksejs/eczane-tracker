@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import { MainPage } from './pages'
 
 import './App.css'
-import { AddressContextProvider } from './utils/AddressContext'
+import { AddressContextProvider } from './common/AddressContext'
 
 const queryClient = new QueryClient()
 

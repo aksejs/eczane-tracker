@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Geocode from 'react-geocode'
 
 import { Button } from '../../components'
-import { useGeolocation } from '../../utils/hooks'
+import { useGeolocation } from '../../common/hooks'
 
 import styles from './styles.module.css'
 

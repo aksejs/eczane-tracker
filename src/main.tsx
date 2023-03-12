@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 
 import './index.css'
-import { GOOGLE_API_KEY } from './utils/contants'
+import { GOOGLE_API_KEY } from './common/contants'
 
 Geocode.setApiKey(GOOGLE_API_KEY)
 
