@@ -6,14 +6,16 @@ import React, {
   useState,
 } from 'react'
 import axios from 'axios'
-import * as _ from 'lodash'
+import _ from 'lodash'
+import { collection, getDocs } from 'firebase/firestore'
 
 import { Button, Map } from '@/components'
-import { AddressContext } from '../../common/AddressContext'
+import { AddressContext } from '@/common/AddressContext'
+import { GOOGLE_API_KEY } from '@/common/contants'
+import { Prediction } from '@/common/types'
+import { db } from '@/common/firebase'
 
 import styles from './styles.module.css'
-import { GOOGLE_API_KEY } from '../../common/contants'
-import { Prediction } from '@/common/types'
 
 const AddressInput: React.FC<{ defaultValue?: string }> = ({
   defaultValue,
@@ -86,12 +88,13 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 
 export const MainPage: FunctionComponent = () => {
   const { address, location } = useContext(AddressContext)
-  const [isManually, setIsManually] = useState(false)
 
   useEffect(() => {
-    fetch(`/place-api?key=${GOOGLE_API_KEY}&input=kadikoy`).then((res) =>
-      res.json()
-    )
+    getDocs(collection(db, 'pharmacies')).then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data().name}`)
+      })
+    })
   }, [])
 
   const renderAddress = () => {
@@ -104,12 +107,6 @@ export const MainPage: FunctionComponent = () => {
         <p className={styles.addressTitle}>
           Is it your address: <strong>{address}</strong> ?
         </p>
-        <div className={styles.buttonsWrapper}>
-          <Button onClick={() => setIsManually(false)}>Yes</Button>
-          <Button onClick={() => setIsManually(true)}>
-            No, enter it manually
-          </Button>
-        </div>
       </div>
     )
   }
