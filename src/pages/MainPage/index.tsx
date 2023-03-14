@@ -107,6 +107,7 @@ export const MainPage: FunctionComponent = () => {
         <p className={styles.addressTitle}>
           Is it your address: <strong>{address}</strong> ?
         </p>
+        <AddressInput defaultValue={address} />
       </div>
     )
   }
@@ -123,7 +124,6 @@ export const MainPage: FunctionComponent = () => {
     <div className="App">
       <>
         {renderAddress()}
-        <AddressInput defaultValue={address} />
         {renderMap()}
       </>
     </div>

@@ -1,4 +1,22 @@
 const puppeteer = require('puppeteer')
+const { initializeApp } = require('firebase/app')
+const { getFirestore, collection, addDoc } = require('firebase/firestore')
+
+require('dotenv').config()
+
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: 'eczane-tracker.firebaseapp.com',
+  projectId: 'eczane-tracker',
+  storageBucket: 'eczane-tracker.appspot.com',
+  messagingSenderId: '662266221623',
+  appId: '1:662266221623:web:b8b0c7442b9b1a4cf2dbb2',
+}
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig)
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app)
 
 function delay(time) {
   return new Promise(function (resolve) {
@@ -6,7 +24,13 @@ function delay(time) {
   })
 }
 
-const getData = async () => {
+const setData = async (data) => {
+  data.forEach(async (item) => {
+    await addDoc(collection(db, 'pharmacies'), item)
+  })
+}
+
+const parseData = async () => {
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
 
@@ -54,9 +78,9 @@ const getData = async () => {
 
   await browser.close()
 
-  console.log(data)
-
-  return data
+  if (data) {
+    setData(data)
+  }
 }
 
-getData()
+parseData()
