@@ -30,7 +30,7 @@ const setData = async (data) => {
   })
 }
 
-const parseData = async () => {
+const parseData = async (dateString = '14/03/2023') => {
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
 
@@ -41,7 +41,7 @@ const parseData = async () => {
   )
 
   await page.select('#plakaKodu', '34')
-  await page.type('.advdate', '14/03/2023')
+  await page.type('.advdate', dateString)
   await page.click('.submitButton')
 
   await delay(3000)
@@ -61,6 +61,7 @@ const parseData = async () => {
       address,
       tel,
       other,
+      date: dateString,
     }))
     .slice(1)
 
