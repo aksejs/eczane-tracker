@@ -1,6 +1,9 @@
-const puppeteer = require('puppeteer')
-const { initializeApp } = require('firebase/app')
-const { getFirestore, collection, addDoc } = require('firebase/firestore')
+import puppeteer from 'puppeteer'
+import functions from 'firebase-functions'
+import { initializeApp } from 'firebase/app'
+import { getFirestore, collection, addDoc } from 'firebase/firestore'
+
+import { Pharmacy } from '../utils/types'
 
 require('dotenv').config()
 
@@ -18,13 +21,13 @@ const app = initializeApp(firebaseConfig)
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app)
 
-function delay(time) {
+function delay(time: number) {
   return new Promise(function (resolve) {
     setTimeout(resolve, time)
   })
 }
 
-const setData = async (data) => {
+const setData = async (data: Array<Pharmacy>) => {
   data.forEach(async (item) => {
     await addDoc(collection(db, 'pharmacies'), item)
   })
@@ -54,7 +57,7 @@ const parseData = async (dateString = '14/03/2023') => {
     })
   })
 
-  let data = result
+  let data: Pharmacy[] = result
     .map(([name, district, tel, address, other]) => ({
       name,
       district,
@@ -72,9 +75,13 @@ const parseData = async (dateString = '14/03/2023') => {
         waitUntil: 'domcontentloaded',
       }
     )
+
     const lat = await page.evaluate('latti')
     const lng = await page.evaluate('longi')
-    data[i] = { ...data[i], lat, lng }
+
+    if (typeof lat === 'number' && typeof lng === 'number') {
+      data[i] = { ...data[i], lat, lng }
+    }
   }
 
   await browser.close()
@@ -85,3 +92,7 @@ const parseData = async (dateString = '14/03/2023') => {
 }
 
 parseData()
+
+export default functions.pubsub.schedule('every week').onRun(() => {
+  parseData()
+})
