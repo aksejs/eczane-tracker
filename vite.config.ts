@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['public/favicon.ico', 'public/apple-touch-icon.png'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
         name: 'Eczane Tracker',
         short_name: 'EczaneTracker',
@@ -18,12 +18,12 @@ export default defineConfig({
         theme_color: '#ffffff',
         icons: [
           {
-            src: 'public/assets/pwa-192x192.png',
+            src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'public/assets/pwa-512x512.png',
+            src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
           },
