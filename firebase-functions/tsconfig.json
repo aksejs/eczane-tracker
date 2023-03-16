@@ -1,26 +1,27 @@
 {
+  "compilerOptions": {
+    "module": "es2020",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2020",
+    "skipDefaultLibCheck": true,
+    "rootDir": "src",
+    "types": []
+  },
+  "compileOnSave": true,
+  "include": ["src"],
+  "exclude": ["../node_modules/*"],
+  "ts-node": {
+    "transpileOnly": true,
     "compilerOptions": {
-      "module": "es2020",
-      "moduleResolution": "node",
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "noImplicitReturns": true,
-      "noUnusedLocals": true,
-      "strictNullChecks": true,
-      "outDir": "dist",
-      "sourceMap": true,
-      "strict": true,
-      "target": "es2020"
-    },
-    "compileOnSave": true,
-    "include": [
-      "functions"
-, "src/index.ts", "src/functions/parsePharmacies", "src/functions/parsePharmacies.ts"    ],
-    "ts-node": {
-      "transpileOnly": true,
-      "compilerOptions": {
-        "module": "commonjs"
-      }
+      "module": "commonjs"
     }
   }
-  
+}

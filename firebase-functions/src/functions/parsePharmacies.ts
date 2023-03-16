@@ -1,25 +1,8 @@
 import puppeteer from 'puppeteer'
 import functions from 'firebase-functions'
-import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, addDoc } from 'firebase/firestore'
+import admin from 'firebase-admin'
 
 import { Pharmacy } from '../utils/types'
-
-require('dotenv').config()
-
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: 'eczane-tracker.firebaseapp.com',
-  projectId: 'eczane-tracker',
-  storageBucket: 'eczane-tracker.appspot.com',
-  messagingSenderId: '662266221623',
-  appId: '1:662266221623:web:b8b0c7442b9b1a4cf2dbb2',
-}
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig)
-// Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app)
 
 function delay(time: number) {
   return new Promise(function (resolve) {
@@ -29,7 +12,7 @@ function delay(time: number) {
 
 const setData = async (data: Array<Pharmacy>) => {
   data.forEach(async (item) => {
-    await addDoc(collection(db, 'pharmacies'), item)
+    await admin.firestore().collection('pharmacies').add(item)
   })
 }
 
