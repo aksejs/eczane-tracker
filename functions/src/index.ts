@@ -1,8 +1,8 @@
-import admin from 'firebase-admin'
+import * as admin from 'firebase-admin'
+admin.initializeApp()
+
 // import parsePharmaciesFunction from './functions/parsePharmacies'
 import googleMapsHttpsEndpointFunction from './functions/googleMapsHttpsEndpoint'
-
-admin.initializeApp()
 
 // export const parsePharmacies = parsePharmaciesFunction
 export const googleMapsHttpsEndpoint = googleMapsHttpsEndpointFunction
