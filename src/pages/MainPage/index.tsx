@@ -8,12 +8,14 @@ import React, {
 import axios from 'axios'
 import _ from 'lodash'
 import { collection, getDocs } from 'firebase/firestore'
+import { getFunctions } from 'firebase/functions'
+import { useHttpsCallable } from 'react-firebase-hooks/functions'
 
 import { Button, Map } from '@/components'
 import { AddressContext } from '@/common/AddressContext'
 import { GOOGLE_API_KEY } from '@/common/contants'
 import { Prediction } from '@/common/types'
-import { db } from '@/common/firebase'
+import { app, db } from '@/common/firebase'
 
 import styles from './styles.module.css'
 
@@ -22,18 +24,15 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 }) => {
   const [predictions, setPredictions] = useState<Prediction[]>()
   const [value, setValue] = useState<string>(defaultValue || '')
+  const [executeCallable, loading, error] = useHttpsCallable(
+    getFunctions(app),
+    'searchAddressHttps'
+  )
 
   const search = async (value: string) => {
-    const {
-      data: { predictions },
-    } = await axios.get('/place-api', {
-      params: {
-        key: GOOGLE_API_KEY,
-        input: value,
-      },
-    })
-
-    return predictions
+    const resp = await executeCallable({ term: 'kadikoy' })
+    console.log(resp)
+    return []
   }
 
   const debouncedSearch = React.useRef(

@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-import functions from 'firebase-functions'
+import * as functions from 'firebase-functions'
 import admin from 'firebase-admin'
 
 import { Pharmacy } from '../utils/types'
@@ -74,8 +74,11 @@ const parseData = async (dateString = '14/03/2023') => {
   }
 }
 
-parseData()
-
-export default functions.pubsub.schedule('every week').onRun(() => {
-  parseData()
-})
+export default functions
+  .region('europe-west1')
+  .pubsub.schedule('every week')
+  .timeZone('Europe/Istanbul')
+  .onRun(() => {
+    //parseData()
+    console.log('fired')
+  })
