@@ -6,6 +6,11 @@
       {
         "source": "**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/eczane-tracker",
+        "function": "searchAddressHttps",
+        "region": "europe-west1"
       }
     ]
   },
@@ -19,9 +24,7 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"]
     }
   ]
 }
