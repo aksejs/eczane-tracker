@@ -4,22 +4,11 @@ import axios from 'axios'
 export default functions.region('europe-west1').https.onCall(async (data) => {
   const { lat, lng } = data
 
-  console.log(
-    '-->',
-    lat,
-    lng,
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
-      functions.config().google.secret
-    }`
-  )
-
   const res = await axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
       functions.config().google.secret
     }`
   )
-
-  console.log('<<>>>>', res)
 
   return res.data.results
 })
