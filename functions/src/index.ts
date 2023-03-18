@@ -2,9 +2,9 @@ import * as admin from 'firebase-admin'
 admin.initializeApp()
 
 // import parsePharmaciesFunction from './functions/parsePharmacies'
-import googleMapsHttpsEndpointFunction from './functions/googleMapsHttpsEndpoint'
 import searchAddressHttpsFunction from './functions/searchAddressHttps'
+import geocodeAddressHttpsFunction from './functions/geocodeAddressHttps'
 
 // export const parsePharmacies = parsePharmaciesFunction
-export const googleMapsHttpsEndpoint = googleMapsHttpsEndpointFunction
 export const searchAddressHttps = searchAddressHttpsFunction
+export const geocodeAddressHttps = geocodeAddressHttpsFunction
