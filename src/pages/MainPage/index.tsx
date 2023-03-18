@@ -13,9 +13,8 @@ import { useHttpsCallable } from 'react-firebase-hooks/functions'
 
 import { Button, Map } from '@/components'
 import { AddressContext } from '@/common/AddressContext'
-import { GOOGLE_API_KEY } from '@/common/contants'
 import { Prediction } from '@/common/types'
-import { app, db } from '@/common/firebase'
+import { app } from '@/common/firebase'
 
 import styles from './styles.module.css'
 
