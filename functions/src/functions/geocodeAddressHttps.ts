@@ -1,14 +1,29 @@
 import * as functions from 'firebase-functions'
 import axios from 'axios'
 
-export default functions.region('europe-west1').https.onCall(async (data) => {
-  const { lat, lng } = data
+export default functions
+  .region('europe-west1')
+  .https.onCall(async ({ lat, lng }) => {
+    if (!lat || !lng) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'Missing arguments'
+      )
+    }
 
-  const res = await axios.get(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
-      functions.config().google.secret
-    }`
-  )
+    const { data } = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?`,
+      {
+        params: {
+          latlng: `${lat},${lng}`,
+          key: functions.config().google.secret,
+        },
+      }
+    )
 
-  return res.data.results
-})
+    if (!data) {
+      throw new functions.https.HttpsError('internal', 'Bad request')
+    }
+
+    return data.results
+  })
