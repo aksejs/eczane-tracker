@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import browserStorage from 'store'
+import { functions } from './firebase'
 
 interface UseGeolocation {
-  currentLocation?: GeolocationPosition
+  currentLocation?: GeolocationPosition['coords']
   isDisabled: boolean
 }
 
@@ -20,7 +22,7 @@ export function useGeolocation(): UseGeolocation {
   }, [])
 
   return {
-    currentLocation: location,
+    currentLocation: location?.coords,
     isDisabled: isError,
   }
 }

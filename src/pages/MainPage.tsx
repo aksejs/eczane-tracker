@@ -7,16 +7,37 @@ import React, {
 } from 'react'
 import axios from 'axios'
 import _ from 'lodash'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { getFunctions } from 'firebase/functions'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 
-import { Button, Map } from '@/components'
+import { Map, PageContainer } from '@/components'
+import { Box, Button, Flex } from 'rebass'
 import { AddressContext } from '@/common/AddressContext'
-import { Prediction } from '@/common/types'
-import { app } from '@/common/firebase'
+import { Address, Pharmacy, Prediction } from '@/common/types'
+import { app, db } from '@/common/firebase'
+import { Input, Label } from '@rebass/forms'
 
-import styles from './styles.module.css'
+const getPharmacies = async (address: Address) => {
+  const pharmaciesQuery = query(
+    collection(db, 'pharmacies'),
+    where('district', '==', address?.district)
+  )
+  const querySnapshot = await getDocs(pharmaciesQuery)
+  let pharmacies: any = []
+
+  querySnapshot.forEach((doc) => {
+    if (doc.data()) {
+      pharmacies.push(doc.data())
+    }
+  })
+
+  if (pharmacies.length) {
+    return pharmacies
+  }
+
+  return null
+}
 
 const AddressInput: React.FC<{ defaultValue?: string }> = ({
   defaultValue,
@@ -49,8 +70,6 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
     debouncedSearch(e.target.value)
   }
 
-  console.log(predictions)
-
   const renderPredictions = () => {
     if (!predictions?.length || loading || error) {
       return <React.Fragment />
@@ -71,20 +90,22 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
   }
 
   return (
-    <div className={styles.addressFieldContainer}>
-      <div className={styles.formGroup} id="address-mini-form">
-        <div className={styles.addressField}>
-          <label>Your Address</label>
-          <input
+    <div>
+      <Flex flexDirection="column" justifyContent="center">
+        <Box p={3} width={1}>
+          <Label htmlFor="address">Address</Label>
+          <Input
+            id="address"
+            name="address"
+            type="text"
+            placeholder="Your address"
             onFocus={(e) => e.target.select()}
             value={value}
             onChange={handleChange}
-            type="text"
-            className={styles.addressInput}
           />
-        </div>
-        <Button>Find</Button>
-      </div>
+        </Box>
+        <Button m={2}>Find</Button>
+      </Flex>
       {renderPredictions()}
     </div>
   )
@@ -92,14 +113,15 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 
 export const MainPage: FunctionComponent = () => {
   const { address, location } = useContext(AddressContext)
+  const [pharmacies, setPharmacies] = useState<Pharmacy[]>()
 
   useEffect(() => {
-    // getDocs(collection(db, 'pharmacies')).then((querySnapshot) => {
-    //   querySnapshot.forEach((doc) => {
-    //     console.log(`${doc.id} => ${doc.data().name}`)
-    //   })
-    // })
-  }, [])
+    if (address?.district) {
+      getPharmacies(address).then((res: Pharmacy[]) => {
+        setPharmacies(res)
+      })
+    }
+  }, [address])
 
   const renderAddress = () => {
     if (!address) {
@@ -107,11 +129,8 @@ export const MainPage: FunctionComponent = () => {
     }
 
     return (
-      <div className={styles.container}>
-        <p className={styles.addressTitle}>
-          Is it your address: <strong>{address}</strong> ?
-        </p>
-        <AddressInput defaultValue={address} />
+      <div>
+        <AddressInput defaultValue={address.fullAddress} />
       </div>
     )
   }
@@ -121,15 +140,21 @@ export const MainPage: FunctionComponent = () => {
       return React.Fragment
     }
 
-    return <Map lat={location.lat} lng={location.lng} />
+    return (
+      <Map
+        lat={location.latitude}
+        lng={location.longitude}
+        pharmacies={pharmacies}
+      />
+    )
   }
 
   return (
-    <div className="App">
+    <PageContainer>
       <>
         {renderAddress()}
         {renderMap()}
       </>
-    </div>
+    </PageContainer>
   )
 }

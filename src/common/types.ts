@@ -12,9 +12,16 @@ export interface AutocompleteResponse {
   }
 }
 
+export interface Address {
+  fullAddress: string
+  district: string
+}
+
 export interface Pharmacy {
+  address: string
   lat: string
   lng: string
   name: string
   working_hours: Timestamp
+  district: string
 }
