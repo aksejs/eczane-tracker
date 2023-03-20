@@ -1,22 +1,28 @@
 import React, { useState } from 'react'
 import GoogleMapReact from 'google-map-react'
 import MainPin from '../../assets/pin.png'
+import PharmacyPin from '../../assets/pharnacy-pin.png'
 import { GOOGLE_API_KEY } from '../../common/contants'
 import { Box } from 'rebass'
 import { Pharmacy } from '@/common/types'
 
-const Marker: React.FC<any> = ({ opacity }) => (
-  <div
-    style={{
-      textAlign: 'center',
-      transform: 'translate(-50%, -50%)',
-      position: 'absolute',
-      opacity,
-    }}
-  >
-    <img style={{ width: '48px', height: '100%' }} src={MainPin} />
-  </div>
-)
+const Marker: React.FC<any> = ({ opacity, onClick, isMain = true }) => {
+  const pinSrc = isMain ? MainPin : PharmacyPin
+
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        textAlign: 'center',
+        transform: 'translate(-50%, -50%)',
+        position: 'absolute',
+        opacity,
+      }}
+    >
+      <img style={{ width: '48px', height: '100%' }} src={pinSrc} />
+    </div>
+  )
+}
 
 export const Map: React.FC<{
   lat: number
@@ -32,7 +38,13 @@ export const Map: React.FC<{
     }
 
     return pharmacies.map((pharmacy) => (
-      <Marker key={pharmacy.name} lat={pharmacy.lat} lng={pharmacy.lng} />
+      <Marker
+        onClick={() => console.log('fired')}
+        key={pharmacy.name}
+        lat={pharmacy.lat}
+        lng={pharmacy.lng}
+        isMain={false}
+      />
     ))
   }
 

@@ -79,6 +79,6 @@ export default functions
   .pubsub.schedule('every week')
   .timeZone('Europe/Istanbul')
   .onRun(() => {
-    //parseData()
+    // parseData()
     console.log('fired')
   })
