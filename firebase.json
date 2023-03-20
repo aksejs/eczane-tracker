@@ -8,8 +8,8 @@
         "destination": "/index.html"
       },
       {
-        "source": "/eczane-tracker",
-        "function": "searchAddressHttps",
+        "source": "/googleApiEndpointHttps/**",
+        "function": "googleApiEndpointHttps",
         "region": "europe-west1"
       }
     ]

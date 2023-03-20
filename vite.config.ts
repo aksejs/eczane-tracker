@@ -30,15 +30,6 @@ export default defineConfig({
       },
     }),
   ],
-  server: {
-    proxy: {
-      '/place-api': {
-        target: 'https://maps.googleapis.com/maps/api/place/autocomplete/json',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/place-api/, ''),
-      },
-    },
-  },
   resolve: {
     alias: {
       '@/components': path.resolve(__dirname, './src/components'),

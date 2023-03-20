@@ -1,6 +1,7 @@
 import { FirebaseOptions, initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { FIREBASE_API_KEY } from './contants'
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions'
 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig: FirebaseOptions = {
@@ -14,3 +15,8 @@ const firebaseConfig: FirebaseOptions = {
 
 export const app = initializeApp(firebaseConfig)
 export const db = getFirestore(app)
+export const functions = getFunctions(app, 'europe-west1')
+
+if (window.location.hostname === '127.0.0.1') {
+  connectFunctionsEmulator(functions, 'localhost', 5001)
+}

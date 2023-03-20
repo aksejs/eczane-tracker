@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "emulators": "firebase emulators:start",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "prettier": "prettier --write '**/*.{ts,tsx,json,js,jsx}'",

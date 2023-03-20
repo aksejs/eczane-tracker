@@ -3,8 +3,10 @@ import Geocode from 'react-geocode'
 
 import { useGeolocation, usePersistStore } from './hooks'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
-import { getFunctions } from 'firebase/functions'
-import { app } from './firebase'
+import { getFunctions, httpsCallable } from 'firebase/functions'
+import { app, functions } from './firebase'
+import { Prediction } from './types'
+import axios from 'axios'
 
 export interface Location {
   lat: number
@@ -26,7 +28,7 @@ export const AddressContextProvider: React.FC<{
   const { currentLocation } = useGeolocation()
   const [addressLocal, setAddress] = useState('')
   const [executeCallable, loading, error] = useHttpsCallable<any, any>(
-    getFunctions(app, 'europe-west1'),
+    functions,
     'geocodeAddressHttps'
   )
   const [location, setLocation] = useState<GeolocationPosition>()
@@ -47,14 +49,20 @@ export const AddressContextProvider: React.FC<{
     })
   }
 
+  const getGeocode = async ({ lat, lng }: { lat: string; lng: string }) => {
+    const some = await executeCallable({ lat, lng })
+
+    console.log(some)
+  }
+
   useEffect(() => {
     if (!currentLocation) {
       return
     }
 
-    executeCallable({
-      lat: currentLocation.coords.latitude,
-      lng: currentLocation.coords.longitude,
+    getGeocode({
+      lat: currentLocation.coords.latitude.toString(),
+      lng: currentLocation.coords.longitude.toString(),
     })
   }, [currentLocation])
 
