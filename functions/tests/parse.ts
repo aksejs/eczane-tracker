@@ -1,22 +1,40 @@
 import puppeteer from 'puppeteer'
-import * as functions from 'firebase-functions'
-import admin from 'firebase-admin'
+import { getFirestore, addDoc, collection, Timestamp } from 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
 
-import { Pharmacy } from '../utils/types'
-import { dateStringToTimestamp, delay } from '../utils/helpers'
+const firebaseConfig = {
+  apiKey: 'AIzaSyB45WnKQYSL97gnA2w2f6LJuGjfuJDOPbw',
+  authDomain: 'eczane-tracker.firebaseapp.com',
+  projectId: 'eczane-tracker',
+  storageBucket: 'eczane-tracker.appspot.com',
+  messagingSenderId: '662266221623',
+  appId: '1:662266221623:web:b8b0c7442b9b1a4cf2dbb2',
+}
 
-const setData = async (data: Array<Pharmacy>) => {
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
+
+function dateStringToTimestamp(dateString: string) {
+  const dateParts = dateString.split('/')
+  const dateObject = new Date(+dateParts[2], +dateParts[1] - 1, +dateParts[0])
+
+  return dateObject.getTime()
+}
+
+function delay(time: number) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, time)
+  })
+}
+
+const setData = async (data: Array<any>) => {
   data.forEach(async (item) => {
-    await admin.firestore().collection('pharmacies').add(item)
+    await addDoc(collection(db, 'pharmacies'), item)
   })
 }
 
 const parseData = async (dateString: string) => {
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox'],
-    headless: true,
-    timeout: 0,
-  })
+  const browser = await puppeteer.launch()
   const page = await browser.newPage()
 
   await page.setViewport({ width: 1080, height: 1024 })
@@ -39,7 +57,7 @@ const parseData = async (dateString: string) => {
     })
   })
 
-  let data: Pharmacy[] = result
+  let data: any = result
     .map(([name, district, tel, address, other]) => ({
       name,
       district,
@@ -47,9 +65,7 @@ const parseData = async (dateString: string) => {
       tel,
       other,
       date: dateString,
-      timestamp: admin.firestore.Timestamp.fromMillis(
-        dateStringToTimestamp(dateString)
-      ),
+      timestamp: Timestamp.fromMillis(dateStringToTimestamp(dateString)),
     }))
     .slice(1)
 
@@ -76,19 +92,14 @@ const parseData = async (dateString: string) => {
   }
 }
 
-export default functions
-  .region('europe-west1')
-  .pubsub.schedule('25 05 * * TUE')
-  .timeZone('Europe/Istanbul')
-  .onRun(() => {
-    let arr = []
-    for (let i = 0; i < 2; i++) {
-      let day = new Date()
-      day.setDate(day.getDate() + i)
-      arr.push(day.toLocaleDateString())
-    }
+let arr: string[] = []
 
-    arr.forEach((date) => {
-      parseData(date)
-    })
-  })
+for (let i = 0; i < 5; i++) {
+  let day = new Date()
+  day.setDate(day.getDate() + i)
+  arr.push(day.toLocaleDateString())
+}
+
+arr.forEach((date) => {
+  parseData(date)
+})
