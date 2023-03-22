@@ -2,6 +2,8 @@ import puppeteer from 'puppeteer'
 import { getFirestore, addDoc, collection, Timestamp } from 'firebase/firestore'
 import { initializeApp } from 'firebase/app'
 
+process.setMaxListeners(0)
+
 const firebaseConfig = {
   apiKey: 'AIzaSyB45WnKQYSL97gnA2w2f6LJuGjfuJDOPbw',
   authDomain: 'eczane-tracker.firebaseapp.com',
@@ -94,7 +96,7 @@ const parseData = async (dateString: string) => {
 
 let arr: string[] = []
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 21; i++) {
   let day = new Date()
   day.setDate(day.getDate() + i)
   arr.push(day.toLocaleDateString())

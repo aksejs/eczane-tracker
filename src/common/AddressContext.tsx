@@ -16,7 +16,8 @@ export interface Location {
 export const AddressContext = createContext<{
   address?: Address
   location?: GeolocationPosition['coords']
-}>({})
+  setAddress: (address: Address) => void
+}>({ setAddress: () => {} })
 
 export const AddressContextProvider: React.FC<{
   children: React.ReactNode
@@ -49,6 +50,7 @@ export const AddressContextProvider: React.FC<{
       value={{
         address: currentAddress,
         location: currentLocation,
+        setAddress,
       }}
     >
       {children}

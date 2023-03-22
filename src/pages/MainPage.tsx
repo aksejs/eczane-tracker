@@ -2,10 +2,8 @@ import React, {
   FunctionComponent,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from 'react'
-import axios from 'axios'
 import _ from 'lodash'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { getFunctions } from 'firebase/functions'
@@ -42,6 +40,7 @@ const getPharmacies = async (address: Address) => {
 const AddressInput: React.FC<{ defaultValue?: string }> = ({
   defaultValue,
 }) => {
+  const { setAddress } = useContext(AddressContext)
   const [predictions, setPredictions] = useState<Prediction[]>()
   const [value, setValue] = useState<string>(defaultValue || '')
   const [executeCallable, loading, error] = useHttpsCallable<any, Prediction[]>(
@@ -79,7 +78,13 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
       <div>
         {predictions.map((prediction) => (
           <div
-            onClick={() => setValue(prediction.description)}
+            onClick={() => {
+              setValue(prediction.description)
+              setAddress({
+                fullAddress: prediction.description,
+                district: prediction.terms[3].value,
+              })
+            }}
             key={prediction.place_id}
           >
             {prediction.description}
@@ -104,7 +109,9 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
             onChange={handleChange}
           />
         </Box>
-        <Button m={2}>Find</Button>
+        <Button onClick={() => {}} m={2}>
+          Find
+        </Button>
       </Flex>
       {renderPredictions()}
     </div>
@@ -114,6 +121,8 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 export const MainPage: FunctionComponent = () => {
   const { address, location } = useContext(AddressContext)
   const [pharmacies, setPharmacies] = useState<Pharmacy[]>()
+
+  console.log(pharmacies)
 
   useEffect(() => {
     if (address?.district) {

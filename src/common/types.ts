@@ -4,6 +4,10 @@ export interface Prediction {
   description: string
   place_id: string
   types?: Array<string>
+  terms: Array<{
+    offset: number
+    value: string
+  }>
 }
 
 export interface AutocompleteResponse {
