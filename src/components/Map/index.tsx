@@ -3,6 +3,7 @@ import GoogleMapReact from 'google-map-react'
 import MainPin from '../../assets/pin.png'
 import PharmacyPin from '../../assets/pharnacy-pin.png'
 import { GOOGLE_API_KEY } from '../../common/contants'
+import mapStyles from './mapStyles'
 import { Box } from 'rebass'
 import { Pharmacy } from '@/common/types'
 
@@ -40,11 +41,9 @@ export const Map: React.FC<{
     return pharmacies.map((pharmacy) => (
       <Marker
         onClick={() => {
-          console.log(
-            `https://maps.apple.com/?daddr=${pharmacy.lat},${pharmacy.lng}`
-          )
-          window.location.replace(
-            `https://maps.apple.com/?daddr=${pharmacy.lat},${pharmacy.lng}`
+          window.open(
+            `https://maps.google.com/?daddr=${pharmacy.lat},${pharmacy.lng}`,
+            '_blank'
           )
         }}
         key={pharmacy.name}
@@ -61,6 +60,7 @@ export const Map: React.FC<{
         options={{
           minZoom: 15,
           maxZoom: 18,
+          styles: mapStyles,
         }}
         onDrag={() => setOpacity(0)}
         onDragEnd={() => setOpacity(1)}

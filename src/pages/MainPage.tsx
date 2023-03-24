@@ -21,6 +21,8 @@ import { AddressContext } from '@/common/AddressContext'
 import { Address, Pharmacy, Prediction } from '@/common/types'
 import { app, db } from '@/common/firebase'
 import { Input, Label } from '@rebass/forms'
+import GoogleMap from '@/components/GoogleMap/GoogleMap'
+import { GOOGLE_API_KEY } from '@/common/contants'
 
 function getStartOfToday() {
   const now = new Date()
@@ -163,11 +165,17 @@ export const MainPage: FunctionComponent = () => {
       return React.Fragment
     }
 
+    console.log(pharmacies)
+
     return (
-      <Map
-        lat={location.latitude}
-        lng={location.longitude}
-        pharmacies={pharmacies}
+      <GoogleMap
+        apiKey={GOOGLE_API_KEY}
+        center={{ lat: location.latitude, lng: location.longitude }}
+        zoom={15}
+        markers={pharmacies}
+        onIdle={() => {}}
+        onMarkerClick={() => {}}
+        highlightedMarkerId={'sirma'}
       />
     )
   }

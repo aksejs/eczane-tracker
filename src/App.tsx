@@ -1,19 +1,22 @@
 import React from 'react'
-import { ThemeProvider } from '@emotion/react'
-import theme from '@rebass/preset'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 import { MainPage } from './pages'
 import { AddressContextProvider } from './common/AddressContext'
 
+import './styles/globals.css'
+
+const queryClient = new QueryClient()
+
 const App: React.FC = () => {
   return (
-    <div className="App">
+    <QueryClientProvider client={queryClient}>
       <AddressContextProvider>
-        <ThemeProvider theme={theme}>
-          <MainPage />
-        </ThemeProvider>
+        <MainPage />
+        <ReactQueryDevtools />
       </AddressContextProvider>
-    </div>
+    </QueryClientProvider>
   )
 }
 
