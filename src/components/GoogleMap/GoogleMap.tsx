@@ -37,10 +37,10 @@ export default function GoogleMap({
   }, [markers])
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-screen">
       <Wrapper apiKey={apiKey} render={render}>
         <Map
-          className="grow h-full"
+          className="grow h-screen"
           center={center}
           zoom={zoom}
           minZoom={2}

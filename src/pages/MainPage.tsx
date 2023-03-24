@@ -15,14 +15,14 @@ import {
 import { getFunctions } from 'firebase/functions'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 
-import { Map, PageContainer } from '@/components'
-import { Box, Button, Flex } from 'rebass'
 import { AddressContext } from '@/common/AddressContext'
 import { Address, Pharmacy, Prediction } from '@/common/types'
 import { app, db } from '@/common/firebase'
-import { Input, Label } from '@rebass/forms'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import { GOOGLE_API_KEY } from '@/common/contants'
+import { PharmaciesMap } from '@/features/PharmaciesMap'
+import { Query, useQuery } from 'react-query'
+import { useFirestoreQueryData } from '@react-query-firebase/firestore'
 
 function getStartOfToday() {
   const now = new Date()
@@ -37,6 +37,7 @@ const getPharmacies = async (address: Address) => {
     where('district', '==', address?.district),
     where('timestamp', '==', getStartOfToday())
   )
+
   const querySnapshot = await getDocs(pharmaciesQuery)
   let pharmacies: any = []
 
@@ -112,10 +113,10 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 
   return (
     <div>
-      <Flex flexDirection="column" justifyContent="center">
-        <Box p={3} width={1}>
-          <Label htmlFor="address">Address</Label>
-          <Input
+      <div>
+        <div>
+          <label htmlFor="address">Address</label>
+          <input
             id="address"
             name="address"
             type="text"
@@ -124,11 +125,9 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
             value={value}
             onChange={handleChange}
           />
-        </Box>
-        <Button onClick={() => {}} m={2}>
-          Find
-        </Button>
-      </Flex>
+        </div>
+        <button onClick={() => {}}>Find</button>
+      </div>
       {renderPredictions()}
     </div>
   )
@@ -136,17 +135,17 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 
 export const MainPage: FunctionComponent = () => {
   const { address, location } = useContext(AddressContext)
-  const [pharmacies, setPharmacies] = useState<Pharmacy[]>()
-
-  console.log(pharmacies)
-
-  useEffect(() => {
-    if (address?.district) {
-      getPharmacies(address).then((res: Pharmacy[]) => {
-        setPharmacies(res)
-      })
-    }
-  }, [address])
+  const ref = query<any>(
+    collection(db, 'pharmacies'),
+    where('district', '==', 'Kadıköy'),
+    where('timestamp', '==', getStartOfToday())
+  )
+  const { data } = useFirestoreQueryData<Pharmacy>(
+    ['pharmacies', { district: address?.district }],
+    ref,
+    {},
+    { enabled: !!address?.district }
+  )
 
   const renderAddress = () => {
     if (!address) {
@@ -162,30 +161,22 @@ export const MainPage: FunctionComponent = () => {
 
   const renderMap = () => {
     if (!location) {
-      return React.Fragment
+      return <div>Please pick location</div>
     }
 
-    console.log(pharmacies)
+    if (!data) {
+      return <div>Loading...</div>
+    }
 
-    return (
-      <GoogleMap
-        apiKey={GOOGLE_API_KEY}
-        center={{ lat: location.latitude, lng: location.longitude }}
-        zoom={15}
-        markers={pharmacies}
-        onIdle={() => {}}
-        onMarkerClick={() => {}}
-        highlightedMarkerId={'sirma'}
-      />
-    )
+    return <PharmaciesMap pharmacies={data} location={location} />
   }
 
   return (
-    <PageContainer>
+    <div>
       <>
         {renderAddress()}
         {renderMap()}
       </>
-    </PageContainer>
+    </div>
   )
 }

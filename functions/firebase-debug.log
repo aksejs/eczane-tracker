@@ -410,3 +410,108 @@ Issues? Report them at https://github.com/firebase/firebase-tools/issues and att
 [info] i  functions: Finished "europe-west1-geocodeAddressHttps" in 239.302792ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-geocodeAddressHttps"},"extension":{},"message":"Finished \"europe-west1-geocodeAddressHttps\" in 239.302792ms"}}
 [debug] [2023-03-24T16:14:32.817Z] [worker-europe-west1-geocodeAddressHttps-65e1fc09-4daa-4abc-aa5f-d0265ef83a08]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-geocodeAddressHttps"},"extension":{},"message":"[worker-europe-west1-geocodeAddressHttps-65e1fc09-4daa-4abc-aa5f-d0265ef83a08]: IDLE"}}
 [debug] [2023-03-24T16:14:32.817Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2023-03-24T16:48:21.555Z] ----------------------------------------------------------------------
+[debug] [2023-03-24T16:48:21.556Z] Command:       /Users/akse/.local/share/nvm/v16.10.0/bin/node /Users/akse/.npm-global/bin/firebase emulators:start --only functions
+[debug] [2023-03-24T16:48:21.557Z] CLI Version:   11.24.1
+[debug] [2023-03-24T16:48:21.557Z] Platform:      darwin
+[debug] [2023-03-24T16:48:21.557Z] Node Version:  v16.10.0
+[debug] [2023-03-24T16:48:21.559Z] Time:          Fri Mar 24 2023 19:48:21 GMT+0300 (Moscow Standard Time)
+[debug] [2023-03-24T16:48:21.559Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-24T16:48:21.561Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-03-24T16:48:21.618Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-24T16:48:21.619Z] > authorizing via signed-in user (akserx@gmail.com)
+[info] i  emulators: Starting emulators: functions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions"}}
+[debug] [2023-03-24T16:48:22.098Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-03-24T16:48:22.098Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-03-24T16:48:22.104Z] [hub] writing locator at /var/folders/vc/bhrw5q5d1y90szt3njwxlzwm0000gn/T/hub-eczane-tracker.json
+[debug] [2023-03-24T16:48:22.428Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-03-24T16:48:22.428Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-03-24T16:48:22.428Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: auth, firestore, database, hosting, pubsub, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mauth, firestore, database, hosting, pubsub, storage\u001b[22m"}}
+[debug] [2023-03-24T16:48:22.431Z] defaultcredentials: writing to file /Users/akse/.config/firebase/akserx_gmail_com_application_default_credentials.json
+[debug] [2023-03-24T16:48:22.436Z] Setting GAC to /Users/akse/.config/firebase/akserx_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /Users/akse/.config/firebase/akserx_gmail_com_application_default_credentials.json"}}
+[debug] [2023-03-24T16:48:22.436Z] > refreshing access token with scopes: []
+[debug] [2023-03-24T16:48:22.437Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-03-24T16:48:22.437Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-24T16:48:22.607Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-03-24T16:48:22.607Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-24T16:48:22.619Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/eczane-tracker/adminSdkConfig [none]
+[debug] [2023-03-24T16:48:22.751Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2023-03-24T16:48:22.752Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2023-03-24T16:48:22.921Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/eczane-tracker/adminSdkConfig 200
+[debug] [2023-03-24T16:48:22.921Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/eczane-tracker/adminSdkConfig {"projectId":"eczane-tracker","storageBucket":"eczane-tracker.appspot.com"}
+[debug] [2023-03-24T16:48:22.936Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-03-24T16:48:22.936Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-03-24T16:48:22.936Z] Starting Emulator UI with command {"binary":"node","args":["/Users/akse/.cache/firebase/emulators/ui-v1.11.4/server/server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"/Users/akse/.cache/firebase/emulators/ui-v1.11.4/server/server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-03-24T16:48:23.020Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-03-24T16:48:23.020Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "/Users/akse/eczane-tracker/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/Users/akse/eczane-tracker/functions\" for Cloud Functions..."}}
+[debug] [2023-03-24T16:48:23.202Z] Validating nodejs source
+[debug] [2023-03-24T16:48:23.585Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "axios": "^1.3.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0",
+    "puppeteer": "16.2.0",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.0.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-03-24T16:48:23.585Z] Building nodejs source
+[debug] [2023-03-24T16:48:23.586Z] Failed to find version of module node: reached end of search path /Users/akse/eczane-tracker/functions/node_modules
+[info] ✔  functions: Using node@16 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2023-03-24T16:48:23.589Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-03-24T16:48:23.592Z] Found firebase-functions binary at '/Users/akse/eczane-tracker/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-03-24T16:48:23.699Z] Serving at port 8099
+
+[debug] [2023-03-24T16:48:23.913Z] Got response from /__/functions.yaml {"endpoints":{"parsePharmacies":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["europe-west1"],"scheduleTrigger":{"schedule":"25 05 * * TUE","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":"Europe/Istanbul"},"labels":{},"entryPoint":"parsePharmacies"},"searchAddressHttps":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["europe-west1"],"callableTrigger":{},"entryPoint":"searchAddressHttps"},"geocodeAddressHttps":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["europe-west1"],"callableTrigger":{},"entryPoint":"geocodeAddressHttps"},"googleApiEndpointHttps":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["europe-west1"],"httpsTrigger":{},"entryPoint":"googleApiEndpointHttps"},"deletePharmaciesSchedule":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"region":["europe-west1"],"scheduleTrigger":{"schedule":"0 1 * * *","retryConfig":{"retryCount":null,"maxDoublings":null,"maxRetryDuration":null,"maxBackoffDuration":null,"minBackoffDuration":null},"timeZone":"Europe/Istanbul"},"labels":{},"entryPoint":"deletePharmaciesSchedule"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}]}
+[debug] [2023-03-24T16:48:23.918Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: parsePharmacies, searchAddressHttps, geocodeAddressHttps, googleApiEndpointHttps, deletePharmaciesSchedule. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: parsePharmacies, searchAddressHttps, geocodeAddressHttps, googleApiEndpointHttps, deletePharmaciesSchedule."}}
+[info] i  functions[europe-west1-parsePharmacies]: function ignored because the pubsub emulator does not exist or is not running. {"metadata":{"emulator":{"name":"functions"},"message":"function ignored because the pubsub emulator does not exist or is not running."}}
+[info] ✔  functions[europe-west1-searchAddressHttps]: http function initialized (http://127.0.0.1:5001/eczane-tracker/europe-west1/searchAddressHttps). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/eczane-tracker/europe-west1/searchAddressHttps)."}}
+[info] ✔  functions[europe-west1-geocodeAddressHttps]: http function initialized (http://127.0.0.1:5001/eczane-tracker/europe-west1/geocodeAddressHttps). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/eczane-tracker/europe-west1/geocodeAddressHttps)."}}
+[info] ✔  functions[europe-west1-googleApiEndpointHttps]: http function initialized (http://127.0.0.1:5001/eczane-tracker/europe-west1/googleApiEndpointHttps). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/eczane-tracker/europe-west1/googleApiEndpointHttps)."}}
+[info] i  functions[europe-west1-deletePharmaciesSchedule]: function ignored because the pubsub emulator does not exist or is not running. {"metadata":{"emulator":{"name":"functions"},"message":"function ignored because the pubsub emulator does not exist or is not running."}}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬────────────────┬─────────────────────────────────┐
+│ Emulator  │ Host:Port      │ View in Emulator UI             │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Functions │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+└───────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 

@@ -1,3 +1,4 @@
+import { GOOGLE_API_KEY } from '@/common/contants'
 import { Pharmacy } from '@/common/types'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import { useState } from 'react'
@@ -7,15 +8,11 @@ interface PharmaciesMapProps {
   location: GeolocationPosition['coords']
 }
 
-export default function PharmaciesMap({
-  pharmacies,
-  location,
-}: PharmaciesMapProps) {
+export function PharmaciesMap({ pharmacies, location }: PharmaciesMapProps) {
   const [center, setCenter] = useState<google.maps.LatLngLiteral>({
     lat: location.latitude,
     lng: location.longitude,
   })
-
   const [zoom, setZoom] = useState<number>(15)
 
   const onIdle = (map: google.maps.Map) => {
@@ -28,5 +25,15 @@ export default function PharmaciesMap({
     }
   }
 
-  return <GoogleMap />
+  return (
+    <GoogleMap
+      apiKey={GOOGLE_API_KEY}
+      center={center}
+      zoom={zoom}
+      markers={pharmacies}
+      onIdle={onIdle}
+      onMarkerClick={() => {}}
+      highlightedMarkerId={'sirma'}
+    />
+  )
 }
