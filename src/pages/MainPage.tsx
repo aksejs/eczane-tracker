@@ -5,7 +5,13 @@ import React, {
   useState,
 } from 'react'
 import _ from 'lodash'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import {
+  Timestamp,
+  collection,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore'
 import { getFunctions } from 'firebase/functions'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 
@@ -16,10 +22,18 @@ import { Address, Pharmacy, Prediction } from '@/common/types'
 import { app, db } from '@/common/firebase'
 import { Input, Label } from '@rebass/forms'
 
+function getStartOfToday() {
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  const timestamp = Timestamp.fromDate(now)
+  return timestamp // ex. 1631246400
+}
+
 const getPharmacies = async (address: Address) => {
   const pharmaciesQuery = query(
     collection(db, 'pharmacies'),
-    where('district', '==', address?.district)
+    where('district', '==', address?.district),
+    where('timestamp', '==', getStartOfToday())
   )
   const querySnapshot = await getDocs(pharmaciesQuery)
   let pharmacies: any = []

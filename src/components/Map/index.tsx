@@ -39,7 +39,14 @@ export const Map: React.FC<{
 
     return pharmacies.map((pharmacy) => (
       <Marker
-        onClick={() => console.log('fired')}
+        onClick={() => {
+          console.log(
+            `https://maps.apple.com/?daddr=${pharmacy.lat},${pharmacy.lng}`
+          )
+          window.location.replace(
+            `https://maps.apple.com/?daddr=${pharmacy.lat},${pharmacy.lng}`
+          )
+        }}
         key={pharmacy.name}
         lat={pharmacy.lat}
         lng={pharmacy.lng}
