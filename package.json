@@ -8,6 +8,7 @@
     "emulators": "firebase emulators:start",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "deploy": "firebase deploy",
     "prettier": "prettier --write '**/*.{ts,tsx,json,js,jsx}'",
     "parse": "node ./parser/index.js"
   },
