@@ -1,5 +1,5 @@
-import { GOOGLE_API_KEY } from '@/common/contants'
-import { Pharmacy } from '@/common/types'
+import { GOOGLE_API_KEY } from '@/config/contants'
+import { Pharmacy } from '@/config/types'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import { useState } from 'react'
 

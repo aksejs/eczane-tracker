@@ -1,7 +1,7 @@
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import { useMemo } from 'react'
-import Map from '../NewMap'
-import { Pharmacy } from '@/common/types'
+import Map from '../Map'
+import { Pharmacy } from '@/config/types'
 import CustomMarker from '../CustomMarker/CustomMarker'
 
 const render = (status: Status) => {
@@ -41,6 +41,7 @@ export default function GoogleMap({
       <Wrapper apiKey={apiKey} render={render}>
         <Map
           className="grow h-screen"
+          gestureHandling="greedy"
           center={center}
           zoom={zoom}
           minZoom={2}

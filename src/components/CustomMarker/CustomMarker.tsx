@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import OverlayView from '../OverlayView'
 import { motion } from 'framer-motion'
-import { Pharmacy } from '@/common/types'
+import { Pharmacy } from '@/config/types'
 
 interface CustomMarkerProps {
   pharmacy: Pharmacy
@@ -46,7 +46,7 @@ export default function CustomMarker({
                 highlight && 'text-black bg-zinc-50 font-bold py-2 px-2.5'
               }`}
               onClick={handleClick}
-            >{`$ ${pharmacy.name}`}</button>
+            >{`${pharmacy.name}`}</button>
           </motion.div>
         </OverlayView>
       )}

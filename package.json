@@ -9,8 +9,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "deploy": "firebase deploy",
-    "prettier": "prettier --write '**/*.{ts,tsx,json,js,jsx}'",
-    "parse": "node ./parser/index.js"
+    "prettier": "prettier --write '**/*.{ts,tsx,json,js,jsx}'"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -30,6 +29,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
+    "react-icons": "^4.8.0",
     "react-query": "^3.39.3",
     "store": "^2.0.12",
     "tailwindcss": "^3.2.7"

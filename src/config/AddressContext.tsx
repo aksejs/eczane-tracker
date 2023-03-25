@@ -1,12 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react'
-import Geocode from 'react-geocode'
 
-import { useGeolocation, usePersistStore } from './hooks'
+import { useGeolocation } from '../hooks/useGeolocation'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
-import { getFunctions, httpsCallable } from 'firebase/functions'
-import { app, functions } from './firebase'
-import { Address, Prediction } from './types'
-import axios from 'axios'
+import { functions } from './firebase'
+import { Address } from './types'
 
 export interface Location {
   lat: number
