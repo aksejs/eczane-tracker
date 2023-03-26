@@ -1,5 +1,6 @@
 import React, {
   FunctionComponent,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -23,6 +24,7 @@ import { GOOGLE_API_KEY } from '@/config/contants'
 import { PharmaciesMap } from '@/features/PharmaciesMap'
 import { Query, useQuery } from 'react-query'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
+import { Card } from '@/components/Card'
 
 function getStartOfToday() {
   const now = new Date()
@@ -140,11 +142,25 @@ export const MainPage: FunctionComponent = () => {
     where('district', '==', 'Kadıköy'),
     where('timestamp', '==', getStartOfToday())
   )
-  const { data } = useFirestoreQueryData<Pharmacy>(
+  const { data } = useFirestoreQueryData<'id', Pharmacy>(
     ['pharmacies', { district: address?.district }],
     ref,
-    {},
-    { enabled: !!address?.district }
+    { idField: 'id' },
+    { enabled: Boolean(address?.district) }
+  )
+
+  const [highlightedPharmacy, sethighlightedPharmacy] =
+    useState<Pharmacy | null>(null)
+
+  const onMarkerClick = useCallback(
+    (payload: Pharmacy) => {
+      if (highlightedPharmacy && highlightedPharmacy.id === payload.id) {
+        sethighlightedPharmacy(null)
+      } else {
+        sethighlightedPharmacy(payload)
+      }
+    },
+    [highlightedPharmacy]
   )
 
   const renderAddress = () => {
@@ -168,7 +184,13 @@ export const MainPage: FunctionComponent = () => {
       return <div>Loading...</div>
     }
 
-    return <PharmaciesMap pharmacies={data} location={location} />
+    return (
+      <PharmaciesMap
+        pharmacies={data as Pharmacy[]}
+        location={location}
+        onMarkerClick={onMarkerClick}
+      />
+    )
   }
 
   return (
@@ -176,6 +198,18 @@ export const MainPage: FunctionComponent = () => {
       <>
         {renderAddress()}
         {renderMap()}
+        <div>
+          {highlightedPharmacy && (
+            <Card
+              name={highlightedPharmacy.name}
+              stars={5}
+              imgUrl={
+                'https://timekariyer.com/dimg/urun/30084203452852030800eczane.jpg'
+              }
+              address={highlightedPharmacy.address}
+            />
+          )}
+        </div>
       </>
     </div>
   )

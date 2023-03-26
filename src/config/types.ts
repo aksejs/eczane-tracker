@@ -22,6 +22,7 @@ export interface Address {
 }
 
 export interface Pharmacy {
+  id: string
   address: string
   lat: string
   lng: string

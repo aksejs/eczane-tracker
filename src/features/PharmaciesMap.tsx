@@ -6,9 +6,14 @@ import { useState } from 'react'
 interface PharmaciesMapProps {
   pharmacies: Pharmacy[]
   location: GeolocationPosition['coords']
+  onMarkerClick: (payload: Pharmacy) => void
 }
 
-export function PharmaciesMap({ pharmacies, location }: PharmaciesMapProps) {
+export function PharmaciesMap({
+  pharmacies,
+  location,
+  onMarkerClick,
+}: PharmaciesMapProps) {
   const [center, setCenter] = useState<google.maps.LatLngLiteral>({
     lat: location.latitude,
     lng: location.longitude,
@@ -32,7 +37,7 @@ export function PharmaciesMap({ pharmacies, location }: PharmaciesMapProps) {
       zoom={zoom}
       markers={pharmacies}
       onIdle={onIdle}
-      onMarkerClick={() => {}}
+      onMarkerClick={onMarkerClick}
       highlightedMarkerId={'sirma'}
     />
   )
