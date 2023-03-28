@@ -3,7 +3,7 @@ import React, { createContext, useEffect, useMemo, useState } from 'react'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import { functions } from '../config/firebase'
-import { Address } from '../config/types'
+import { Address, isLatLngLiteral } from '../config/types'
 import { useAddressCallable } from '@/hooks/useAddressCallable'
 import { GeoLocationSensorState } from '@/hooks/useGeolocationSensor'
 
@@ -13,9 +13,9 @@ export interface Location {
 }
 
 export const AddressContext = createContext<{
-  possibleAddress?: string
-  possibleDistrict?: string
-  geolocation?: GeoLocationSensorState
+  address?: string
+  district?: string
+  latLng?: google.maps.LatLngLiteral
 }>({})
 
 export const AddressContextProvider: React.FC<{
@@ -23,13 +23,19 @@ export const AddressContextProvider: React.FC<{
 }> = ({ children }) => {
   const { possibleAddress, possibleDistrict, geolocation } =
     useAddressCallable()
+  const latLng = useMemo(() => {
+    const literal = { lat: geolocation.latitude, lng: geolocation.longitude }
+    if (isLatLngLiteral(literal)) {
+      return literal
+    }
+  }, [geolocation.latitude, geolocation.longitude])
 
   return (
     <AddressContext.Provider
       value={{
-        possibleAddress,
-        possibleDistrict,
-        geolocation,
+        address: possibleAddress,
+        district: possibleDistrict,
+        latLng,
       }}
     >
       {children}

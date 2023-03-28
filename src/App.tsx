@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { MainPage } from './pages'
 import { AddressContextProvider } from './store/AddressContext'
 
-import './styles/globals.css'
+import './globals.css'
 
 const queryClient = new QueryClient()
 

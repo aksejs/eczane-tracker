@@ -77,7 +77,7 @@ export default function GoogleMap({
           <GoogleMapsMarker />
           {filtered?.map((pharmacy) => (
             <CustomMarker
-              key={pharmacy.name}
+              key={pharmacy.id}
               pharmacy={pharmacy}
               onClick={onMarkerClick}
               highlight={pharmacy.id === highlightedPharmacy?.id}

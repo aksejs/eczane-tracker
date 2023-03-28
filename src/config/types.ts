@@ -30,3 +30,14 @@ export interface Pharmacy {
   working_hours: Timestamp
   district: string
 }
+
+export const isLatLngLiteral = (obj: any): obj is google.maps.LatLngLiteral =>
+  obj != null &&
+  typeof obj === 'object' &&
+  Number.isFinite(obj.lat) &&
+  Number.isFinite(obj.lng)
+
+export const isLatLngOrLatLngLiteral = (
+  obj: any
+): obj is google.maps.LatLng | google.maps.LatLngLiteral =>
+  obj instanceof google.maps.LatLng || isLatLngLiteral(obj)

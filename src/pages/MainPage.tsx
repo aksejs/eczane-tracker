@@ -128,8 +128,7 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 }
 
 export const MainPage: FunctionComponent = () => {
-  const { possibleAddress, possibleDistrict, geolocation } =
-    useContext(AddressContext)
+  const { address, district, latLng } = useContext(AddressContext)
   const [distance, setDistance] = useState()
   const ref = query<any>(
     collection(db, 'pharmacies'),
@@ -142,10 +141,10 @@ export const MainPage: FunctionComponent = () => {
   }, [])
 
   const { data } = useFirestoreQueryData<'id', Pharmacy>(
-    ['pharmacies', { district: possibleDistrict }],
+    ['pharmacies', { district }],
     ref,
     { idField: 'id' },
-    { enabled: Boolean(possibleDistrict) }
+    { enabled: Boolean(district) }
   )
 
   const [highlightedPharmacy, sethighlightedPharmacy] =
@@ -163,13 +162,13 @@ export const MainPage: FunctionComponent = () => {
   )
 
   const renderAddress = () => {
-    if (!possibleAddress) {
+    if (!address) {
       return <div>Введите адрес вручную</div>
     }
 
     return (
       <div>
-        <AddressInput defaultValue={possibleAddress} />
+        <AddressInput defaultValue={address} />
       </div>
     )
   }
@@ -180,7 +179,7 @@ export const MainPage: FunctionComponent = () => {
   )
 
   const renderMap = () => {
-    if (!geolocation) {
+    if (!latLng) {
       return <div>Please pick location</div>
     }
 
@@ -191,7 +190,7 @@ export const MainPage: FunctionComponent = () => {
     return (
       <PharmaciesMap
         pharmacies={data}
-        location={geolocation}
+        location={latLng}
         onMarkerClick={onMarkerClick}
         highlightedPharmacy={highlightedPharmacyMemo}
         setDistance={handleSetDistance}

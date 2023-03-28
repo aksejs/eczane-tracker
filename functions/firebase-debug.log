@@ -863,3 +863,12 @@ Issues? Report them at https://github.com/firebase/firebase-tools/issues and att
 [info] i  functions: Finished "europe-west1-geocodeAddressHttps" in 305.288709ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-geocodeAddressHttps"},"extension":{},"message":"Finished \"europe-west1-geocodeAddressHttps\" in 305.288709ms"}}
 [debug] [2023-03-27T16:38:58.541Z] [worker-europe-west1-geocodeAddressHttps-fa807e74-8753-45a9-9395-77b342906add]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"europe-west1-geocodeAddressHttps"},"extension":{},"message":"[worker-europe-west1-geocodeAddressHttps-fa807e74-8753-45a9-9395-77b342906add]: IDLE"}}
 [debug] [2023-03-27T16:38:58.541Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/eczane-tracker/europe-west1/geocodeAddressHttps-2023-03-27T16:34:45.821Z"],"workRunningCount":1}
+[debug] [2023-03-28T04:59:52.926Z] Received signal SIGINT (Ctrl-C) 1
+[info]  
+[info] i  emulators: Received SIGINT (Ctrl-C) for the first time. Starting a clean shutdown. 
+[info] i  emulators: Please wait for a clean shutdown or send the SIGINT (Ctrl-C) signal again to stop right now. 
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  ui: Stopping Emulator UI {"metadata":{"emulator":{"name":"ui"},"message":"Stopping Emulator UI"}}
+[warn] ⚠  Emulator UI has exited upon receiving signal: SIGINT 
+[info] i  functions: Stopping Functions Emulator {"metadata":{"emulator":{"name":"functions"},"message":"Stopping Functions Emulator"}}
+[info] i  functions: Waiting for all functions to finish... {"metadata":{"emulator":{"name":"functions"},"message":"Waiting for all functions to finish..."}}
