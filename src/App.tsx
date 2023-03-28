@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 import { MainPage } from './pages'
-import { AddressContextProvider } from './config/AddressContext'
+import { AddressContextProvider } from './store/AddressContext'
 
 import './styles/globals.css'
 

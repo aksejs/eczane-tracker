@@ -2,7 +2,7 @@ import React, {
   FunctionComponent,
   useCallback,
   useContext,
-  useEffect,
+  useMemo,
   useState,
 } from 'react'
 import _ from 'lodash'
@@ -16,13 +16,10 @@ import {
 import { getFunctions } from 'firebase/functions'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 
-import { AddressContext } from '@/config/AddressContext'
+import { AddressContext } from '@/store/AddressContext'
 import { Address, Pharmacy, Prediction } from '@/config/types'
 import { app, db } from '@/config/firebase'
-import GoogleMap from '@/components/GoogleMap/GoogleMap'
-import { GOOGLE_API_KEY } from '@/config/contants'
 import { PharmaciesMap } from '@/features/PharmaciesMap'
-import { Query, useQuery } from 'react-query'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
 import { Card } from '@/components/Card'
 
@@ -59,7 +56,6 @@ const getPharmacies = async (address: Address) => {
 const AddressInput: React.FC<{ defaultValue?: string }> = ({
   defaultValue,
 }) => {
-  const { setAddress } = useContext(AddressContext)
   const [predictions, setPredictions] = useState<Prediction[]>()
   const [value, setValue] = useState<string>(defaultValue || '')
   const [executeCallable, loading, error] = useHttpsCallable<any, Prediction[]>(
@@ -99,10 +95,6 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
           <div
             onClick={() => {
               setValue(prediction.description)
-              setAddress({
-                fullAddress: prediction.description,
-                district: prediction.terms[3].value,
-              })
             }}
             key={prediction.place_id}
           >
@@ -136,17 +128,24 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 }
 
 export const MainPage: FunctionComponent = () => {
-  const { address, location } = useContext(AddressContext)
+  const { possibleAddress, possibleDistrict, geolocation } =
+    useContext(AddressContext)
+  const [distance, setDistance] = useState()
   const ref = query<any>(
     collection(db, 'pharmacies'),
     where('district', '==', 'Kadıköy'),
     where('timestamp', '==', getStartOfToday())
   )
+
+  const handleSetDistance = useCallback((distance: any) => {
+    setDistance(distance)
+  }, [])
+
   const { data } = useFirestoreQueryData<'id', Pharmacy>(
-    ['pharmacies', { district: address?.district }],
+    ['pharmacies', { district: possibleDistrict }],
     ref,
     { idField: 'id' },
-    { enabled: Boolean(address?.district) }
+    { enabled: Boolean(possibleDistrict) }
   )
 
   const [highlightedPharmacy, sethighlightedPharmacy] =
@@ -164,19 +163,24 @@ export const MainPage: FunctionComponent = () => {
   )
 
   const renderAddress = () => {
-    if (!address) {
+    if (!possibleAddress) {
       return <div>Введите адрес вручную</div>
     }
 
     return (
       <div>
-        <AddressInput defaultValue={address.fullAddress} />
+        <AddressInput defaultValue={possibleAddress} />
       </div>
     )
   }
 
+  const highlightedPharmacyMemo = useMemo(
+    () => highlightedPharmacy,
+    [highlightedPharmacy]
+  )
+
   const renderMap = () => {
-    if (!location) {
+    if (!geolocation) {
       return <div>Please pick location</div>
     }
 
@@ -186,12 +190,22 @@ export const MainPage: FunctionComponent = () => {
 
     return (
       <PharmaciesMap
-        pharmacies={data as Pharmacy[]}
-        location={location}
+        pharmacies={data}
+        location={geolocation}
         onMarkerClick={onMarkerClick}
+        highlightedPharmacy={highlightedPharmacyMemo}
+        setDistance={handleSetDistance}
       />
     )
   }
+
+  const handleClick = useCallback(() => {
+    if (highlightedPharmacy) {
+      window.open(
+        `https://maps.google.com/?daddr=${highlightedPharmacy.lat},${highlightedPharmacy.lng}`
+      )
+    }
+  }, [highlightedPharmacy])
 
   return (
     <div>
@@ -207,6 +221,7 @@ export const MainPage: FunctionComponent = () => {
                 'https://timekariyer.com/dimg/urun/30084203452852030800eczane.jpg'
               }
               address={highlightedPharmacy.address}
+              onClick={handleClick}
             />
           )}
         </div>

@@ -2,17 +2,22 @@ import { GOOGLE_API_KEY } from '@/config/contants'
 import { Pharmacy } from '@/config/types'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import { useState } from 'react'
+import { GeoLocationSensorState } from '@/hooks/useGeolocationSensor'
 
 interface PharmaciesMapProps {
   pharmacies: Pharmacy[]
-  location: GeolocationPosition['coords']
+  location: GeoLocationSensorState
   onMarkerClick: (payload: Pharmacy) => void
+  highlightedPharmacy: Pharmacy | null
+  setDistance: (distance: any) => void
 }
 
 export function PharmaciesMap({
   pharmacies,
   location,
   onMarkerClick,
+  highlightedPharmacy,
+  setDistance,
 }: PharmaciesMapProps) {
   const [center, setCenter] = useState<google.maps.LatLngLiteral>({
     lat: location.latitude,
@@ -38,7 +43,8 @@ export function PharmaciesMap({
       markers={pharmacies}
       onIdle={onIdle}
       onMarkerClick={onMarkerClick}
-      highlightedMarkerId={'sirma'}
+      highlightedPharmacy={highlightedPharmacy}
+      setDistance={setDistance}
     />
   )
 }
