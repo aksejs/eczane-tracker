@@ -7,6 +7,7 @@ interface CardProps {
   stars: number
   url?: string
   imgUrl: string
+  distance?: string
   onClick: () => void
 }
 
@@ -16,6 +17,7 @@ export default function Card({
   stars,
   url,
   imgUrl,
+  distance,
   onClick,
 }: CardProps) {
   return (
@@ -56,6 +58,9 @@ export default function Card({
             {stars !== Math.trunc(stars) && <ImStarHalf />}
             <span className="text-white">{stars}</span>
           </div>
+          {distance && (
+            <p className="text-sm text-gray-400 mt-1">Distance: {distance}</p>
+          )}
         </div>
       </div>
     </motion.div>

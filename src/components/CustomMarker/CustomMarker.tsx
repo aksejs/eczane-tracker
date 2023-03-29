@@ -8,7 +8,6 @@ interface CustomMarkerProps {
   map?: google.maps.Map
   onClick: (payload: Pharmacy) => void
   highlight?: boolean
-  distance?: any
 }
 
 export default function CustomMarker({
@@ -16,10 +15,8 @@ export default function CustomMarker({
   map,
   onClick,
   highlight,
-  distance,
 }: CustomMarkerProps) {
   const handleClick = useCallback(() => {
-    console.log('distance', distance)
     onClick(pharmacy)
   }, [onClick, pharmacy])
 

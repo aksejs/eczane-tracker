@@ -8,7 +8,6 @@ interface PharmaciesMapProps {
   location: google.maps.LatLngLiteral
   onMarkerClick: (payload: Pharmacy) => void
   highlightedPharmacy: Pharmacy | null
-  setDistance: (distance: any) => void
 }
 
 export function PharmaciesMap({
@@ -16,7 +15,6 @@ export function PharmaciesMap({
   location,
   onMarkerClick,
   highlightedPharmacy,
-  setDistance,
 }: PharmaciesMapProps) {
   const [center, setCenter] = useState<google.maps.LatLngLiteral>(location)
   const [zoom, setZoom] = useState<number>(15)
@@ -40,7 +38,6 @@ export function PharmaciesMap({
       onIdle={onIdle}
       onMarkerClick={onMarkerClick}
       highlightedPharmacy={highlightedPharmacy}
-      setDistance={setDistance}
     />
   )
 }

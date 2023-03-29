@@ -1,11 +1,12 @@
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import Map from '../Map'
 import { Pharmacy } from '@/config/types'
 import CustomMarker from '../CustomMarker/CustomMarker'
 import GoogleMapsMarker from './GoogleMarker'
 import DistanceMatrix from './DistanceMatrix'
 import DistanceMatrixService from './DistanceMatrixService'
+import { AddressContext } from '@/store/AddressContext'
 
 const render = (status: Status) => {
   if (status === Status.FAILURE) {
@@ -23,7 +24,6 @@ interface GoogleMapProps {
   zoom: number
   apiKey: string
   highlightedPharmacy: Pharmacy | null
-  setDistance: (distance: any) => void
 }
 
 export default function GoogleMap({
@@ -35,8 +35,8 @@ export default function GoogleMap({
   markers,
   onMarkerClick,
   highlightedPharmacy,
-  setDistance,
 }: GoogleMapProps) {
+  const { setDistance, latLng } = useContext(AddressContext)
   const filtered = useMemo(() => {
     return markers?.filter((m) => m.lat && m.lng)
   }, [markers])
@@ -49,14 +49,18 @@ export default function GoogleMap({
   return (
     <div className="flex h-screen">
       <Wrapper apiKey={apiKey} render={render}>
-        {some && (
+        {some && latLng && (
           <DistanceMatrixService
             options={{
-              origins: [center],
+              origins: [latLng],
               destinations: [some],
               travelMode: google.maps.TravelMode.WALKING,
             }}
-            callback={(res) => {}}
+            callback={(res) => {
+              if (res) {
+                setDistance(res?.rows[0].elements[0].distance)
+              }
+            }}
           />
         )}
         <Map

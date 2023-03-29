@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import _ from 'lodash'
@@ -128,17 +129,12 @@ const AddressInput: React.FC<{ defaultValue?: string }> = ({
 }
 
 export const MainPage: FunctionComponent = () => {
-  const { address, district, latLng } = useContext(AddressContext)
-  const [distance, setDistance] = useState()
+  const { address, district, latLng, distance } = useContext(AddressContext)
   const ref = query<any>(
     collection(db, 'pharmacies'),
     where('district', '==', 'Kadıköy'),
     where('timestamp', '==', getStartOfToday())
   )
-
-  const handleSetDistance = useCallback((distance: any) => {
-    setDistance(distance)
-  }, [])
 
   const { data } = useFirestoreQueryData<'id', Pharmacy>(
     ['pharmacies', { district }],
@@ -193,7 +189,6 @@ export const MainPage: FunctionComponent = () => {
         location={latLng}
         onMarkerClick={onMarkerClick}
         highlightedPharmacy={highlightedPharmacyMemo}
-        setDistance={handleSetDistance}
       />
     )
   }
@@ -215,6 +210,7 @@ export const MainPage: FunctionComponent = () => {
           {highlightedPharmacy && (
             <Card
               name={highlightedPharmacy.name}
+              distance={distance}
               stars={5}
               imgUrl={
                 'https://timekariyer.com/dimg/urun/30084203452852030800eczane.jpg'
