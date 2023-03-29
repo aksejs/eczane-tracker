@@ -1,7 +1,7 @@
 import { GOOGLE_API_KEY } from '@/config/contants'
-import { Pharmacy } from '@/config/types'
+import { Pharmacy, isLatLngLiteral } from '@/config/types'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { AddressContext } from '@/store/AddressContext'
 import { Card } from '@/components/Card'
 
@@ -43,6 +43,12 @@ export function PharmaciesMap({
     }
   }
 
+  useEffect(() => {
+    if (isLatLngLiteral(location)) {
+      setCenter(location)
+    }
+  }, [location])
+
   const handleClick = useCallback(() => {
     if (highlightedPharmacy) {
       window.open(
@@ -67,9 +73,6 @@ export function PharmaciesMap({
           name={highlightedPharmacy.name}
           distance={distance}
           stars={5}
-          imgUrl={
-            'https://timekariyer.com/dimg/urun/30084203452852030800eczane.jpg'
-          }
           address={highlightedPharmacy.address}
           onClick={handleClick}
         />

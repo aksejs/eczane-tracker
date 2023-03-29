@@ -11,17 +11,10 @@ export default function DistanceMatrix({
   setDistance: (distance: any) => void
 }) {
   useEffect(() => {
-    ;() => {
-      console.log('unmount')
-    }
-  }, [])
-
-  useEffect(() => {
     const service = new google.maps.DistanceMatrixService()
 
     function callback(response: google.maps.DistanceMatrixResponse | null) {
       if (response) {
-        console.log(response.rows[0].elements[0].distance)
         setDistance(response.rows[0].elements[0].distance)
       }
     }

@@ -9,6 +9,7 @@ export default function GoogleMapsMarker({
     if (!marker) {
       setMarker(new google.maps.Marker())
     }
+
     return () => {
       if (marker) {
         marker.setMap(null)

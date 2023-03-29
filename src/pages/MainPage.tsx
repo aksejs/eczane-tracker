@@ -17,18 +17,18 @@ function getStartOfToday() {
 }
 
 export const MainPage: FunctionComponent = () => {
-  const { address, district, latLng, distance } = useContext(AddressContext)
+  const { address, latLng, distance } = useContext(AddressContext)
   const ref = query<any>(
     collection(db, 'pharmacies'),
-    where('district', '==', 'Kadıköy'),
+    where('district', '==', address?.district || 'Kadıköy'),
     where('timestamp', '==', getStartOfToday())
   )
 
   const { data } = useFirestoreQueryData<'id', Pharmacy>(
-    ['pharmacies', { district }],
+    ['pharmacies', { district: address?.district }],
     ref,
-    { idField: 'id' },
-    { enabled: Boolean(district) }
+    { idField: 'id', subscribe: false },
+    { enabled: Boolean(address?.district) }
   )
 
   const renderMap = () => {
@@ -47,13 +47,8 @@ export const MainPage: FunctionComponent = () => {
 
   return (
     <div className="bg-white dark:bg-slate-800 h-screen dark:text-zinc-300">
-      {address && (
-        <AddressField
-          defaultAddress={{
-            district,
-            fullAddress: address,
-          }}
-        />
+      {address?.fullAddress && address.district && (
+        <AddressField defaultAddress={address} />
       )}
       {renderMap()}
     </div>

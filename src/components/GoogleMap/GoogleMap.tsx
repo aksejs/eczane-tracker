@@ -1,5 +1,5 @@
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { useCallback, useContext, useMemo } from 'react'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
 import Map from '../Map'
 import { Pharmacy } from '@/config/types'
 import CustomMarker from '../CustomMarker/CustomMarker'
@@ -41,7 +41,7 @@ export default function GoogleMap({
     return markers?.filter((m) => m.lat && m.lng)
   }, [markers])
 
-  const some = highlightedPharmacy && {
+  const highlightedPharmacyLatLng = highlightedPharmacy && {
     lat: +highlightedPharmacy.lat,
     lng: +highlightedPharmacy.lng,
   }
@@ -49,11 +49,11 @@ export default function GoogleMap({
   return (
     <div className="flex h-[95vh]">
       <Wrapper apiKey={apiKey} render={render}>
-        {some && latLng && (
+        {highlightedPharmacyLatLng && latLng && (
           <DistanceMatrixService
             options={{
               origins: [latLng],
-              destinations: [some],
+              destinations: [highlightedPharmacyLatLng],
               travelMode: google.maps.TravelMode.WALKING,
             }}
             callback={(res) => {
@@ -78,7 +78,7 @@ export default function GoogleMap({
           zoomControl={false}
           clickableIcons={false}
         >
-          <GoogleMapsMarker />
+          <GoogleMapsMarker key={latLng?.lat} position={latLng} />
           {filtered?.map((pharmacy) => (
             <CustomMarker
               key={pharmacy.id}

@@ -20,6 +20,14 @@ export default function CustomMarker({
     onClick(pharmacy)
   }, [onClick, pharmacy])
 
+  const highLightedStyles = useMemo(
+    () =>
+      highlight
+        ? 'text-black bg-zinc-50 font-bold py-2 px-2.5'
+        : 'bg-zinc-600 py-1.5 px-2 text-white',
+    [highlight]
+  )
+
   return (
     <>
       {map && (
@@ -42,9 +50,7 @@ export default function CustomMarker({
             }}
           >
             <button
-              className={`rounded-full bg-zinc-600 py-1.5 px-2 drop-shadow text-xs text-white ${
-                highlight && 'text-black bg-zinc-50 font-bold py-2 px-2.5'
-              }`}
+              className={`${highLightedStyles} rounded-full drop-shadow text-xs`}
               onClick={handleClick}
             >{`${pharmacy.name}`}</button>
           </motion.div>

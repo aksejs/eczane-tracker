@@ -17,6 +17,9 @@ export const app = initializeApp(firebaseConfig)
 export const db = getFirestore(app)
 export const functions = getFunctions(app, 'europe-west1')
 
-if (window.location.hostname === '127.0.0.1') {
+if (
+  window.location.hostname === '127.0.0.1' ||
+  window.location.hostname === 'localhost'
+) {
   connectFunctionsEmulator(functions, 'localhost', 5001)
 }

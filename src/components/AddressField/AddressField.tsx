@@ -1,14 +1,15 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useContext, useEffect, useRef, useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import { functions } from '@/config/firebase'
-import { Prediction } from '@/config/types'
+import { Prediction, isLatLngLiteral } from '@/config/types'
 import _ from 'lodash'
+import { AddressContext } from '@/store/AddressContext'
 
 interface Address {
   placeId?: string
-  fullAddress: string
+  fullAddress?: string
   district?: string
 }
 
@@ -18,17 +19,23 @@ export default function AddressField({
   defaultAddress?: Address
 }) {
   const [predictions, setPredictions] = useState<Address[]>([])
-  const [executeCallable, loading, error] = useHttpsCallable<
+  const [executeSearchAddress, loading, error] = useHttpsCallable<
     any,
     google.maps.places.AutocompletePrediction[]
   >(functions, 'searchAddressHttps')
+  const [executeGetLatLng] = useHttpsCallable<any, any>(
+    functions,
+    'geocodePlaceIdHttps'
+  )
+
+  const { setAddress, setLatLng } = useContext(AddressContext)
   const [selected, setSelected] = useState<Address | null>(
     defaultAddress || null
   )
   const [query, setQuery] = useState('')
 
   const search = async (value: string) => {
-    const resp = await executeCallable({ term: value })
+    const resp = await executeSearchAddress({ term: value })
 
     if (!resp) {
       return []
@@ -51,20 +58,31 @@ export default function AddressField({
     }, 1000)
   ).current
 
+  const handleSelect = async (selectedValue: Address | null) => {
+    setSelected(selectedValue)
+
+    if (selectedValue?.placeId) {
+      const res = await executeGetLatLng({ placeId: selectedValue.placeId })
+      const literal = res?.data[0].geometry.location
+      if (isLatLngLiteral(literal)) {
+        setAddress({
+          fullAddress: selectedValue?.fullAddress,
+          district: selectedValue?.district,
+        })
+        setLatLng(literal)
+      }
+    }
+  }
+
   return (
     <div className="h-[5vh]">
       <div className="flex absolute z-10">
-        <Combobox
-          value={selected}
-          onChange={(selectedValue) => {
-            setSelected(selectedValue)
-          }}
-        >
+        <Combobox value={selected} onChange={handleSelect}>
           <div className="relative m-1 w-96">
             <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
               <Combobox.Input
                 className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                displayValue={(address: Address) => address.fullAddress}
+                displayValue={(address: Address) => address.fullAddress || ''}
                 onChange={(event) => {
                   setQuery(event.target.value)
                   debouncedSearch(event.target.value)

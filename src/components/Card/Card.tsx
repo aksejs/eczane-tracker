@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { ImStarFull, ImStarHalf } from 'react-icons/im'
 
+import defaultImage from '@/assets/eczane-default.jpg'
+
 interface CardProps {
   name: string
   address: string
   stars: number
   url?: string
-  imgUrl: string
   distance?: string
   onClick: () => void
 }
@@ -16,7 +17,6 @@ export default function Card({
   address,
   stars,
   url,
-  imgUrl,
   distance,
   onClick,
 }: CardProps) {
@@ -33,7 +33,11 @@ export default function Card({
       >
         <div className="w-28">
           <p>
-            <img src={imgUrl} alt={`Cat for ${name}`} className="rounded" />
+            <img
+              src={defaultImage}
+              alt={`Cat for ${name}`}
+              className="rounded"
+            />
           </p>
         </div>
         <div className="grow">
