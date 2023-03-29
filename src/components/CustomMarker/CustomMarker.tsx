@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import OverlayView from '../OverlayView'
 import { motion } from 'framer-motion'
-import { Pharmacy } from '@app/config/types'
+import { Pharmacy } from '@app/utils/types'
 
 interface CustomMarkerProps {
   pharmacy: Pharmacy

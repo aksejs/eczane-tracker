@@ -1,10 +1,10 @@
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import { useCallback, useContext, useEffect, useMemo } from 'react'
-import Map from '../Map'
-import { Pharmacy } from '@app/config/types'
+import { Map } from '../Map'
+import { Pharmacy } from '@app/utils/types'
 import CustomMarker from '../CustomMarker/CustomMarker'
 import GoogleMapsMarker from './GoogleMarker'
-import DistanceMatrix from './DistanceMatrix'
+// import DistanceMatrix from './DistanceMatrix'
 import DistanceMatrixService from './DistanceMatrixService'
 import { AddressContext } from '@app/store/AddressContext'
 

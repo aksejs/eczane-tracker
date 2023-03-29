@@ -1,8 +1,8 @@
-import { FunctionComponent, ReactNode, useContext } from 'react'
+import { FunctionComponent, useContext } from 'react'
 import _ from 'lodash'
 
 import { AddressContext } from '@app/store/AddressContext'
-import { PharmaciesMap } from '@app/features/PharmaciesMap'
+import { Pharmacies } from '@app/components/Phamracies'
 import { AddressField, PageWrapper } from '@app/components'
 
 export const MainPage: FunctionComponent = () => {
@@ -23,11 +23,7 @@ export const MainPage: FunctionComponent = () => {
         <AddressField defaultAddress={address} />
       )}
       {latLng && (
-        <PharmaciesMap
-          address={address}
-          location={latLng}
-          distance={distance}
-        />
+        <Pharmacies address={address} location={latLng} distance={distance} />
       )}
     </PageWrapper>
   )

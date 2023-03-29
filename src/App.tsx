@@ -2,7 +2,7 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
-import { MainPage } from './pages'
+import { MainPage } from './pages/MainPage'
 import { AddressContextProvider } from './store/AddressContext'
 
 import './globals.css'

@@ -9,8 +9,8 @@ import React, {
 
 import { useGeolocation } from '@app/hooks/useGeolocation'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
-import { functions } from '@app/config/firebase'
-import { Address, isLatLngLiteral } from '@app/config/types'
+import { functions } from '@app/utils/firebase'
+import { Address, isLatLngLiteral } from '@app/utils/types'
 import { useAddressCallable } from '@app/hooks/useAddressCallable'
 import { GeoLocationSensorState } from '@app/hooks/useGeolocationSensor'
 

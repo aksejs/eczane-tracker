@@ -1,11 +1,11 @@
-import { GOOGLE_API_KEY } from '@app/config/contants'
-import { Address, Pharmacy, isLatLngLiteral } from '@app/config/types'
+import { GOOGLE_API_KEY } from '@app/utils/contants'
+import { Address, Pharmacy, isLatLngLiteral } from '@app/utils/types'
 import { Card, GoogleMap } from '@app/components'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AddressContext } from '@app/store/AddressContext'
 import { Timestamp, collection, query, where } from 'firebase/firestore'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
-import { db } from '@app/config/firebase'
+import { db } from '@app/utils/firebase'
 
 function getStartOfToday() {
   const now = new Date()
@@ -20,7 +20,7 @@ interface PharmaciesMapProps {
   distance?: string
 }
 
-export function PharmaciesMap({
+export default function PharmaciesMap({
   location,
   address,
   distance,

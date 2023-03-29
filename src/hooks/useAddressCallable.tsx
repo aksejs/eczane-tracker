@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 
-import { functions } from '@app/config/firebase'
-import { Address } from '@app/config/types'
+import { functions } from '@app/utils/firebase'
+import { Address } from '@app/utils/types'
 
 import { useGeolocationSensor } from './useGeolocationSensor'
 
