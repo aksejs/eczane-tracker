@@ -23,6 +23,7 @@ import { app, db } from '@/config/firebase'
 import { PharmaciesMap } from '@/features/PharmaciesMap'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
 import { Card } from '@/components/Card'
+import AddressField from '@/components/AddressField/AddressField'
 
 function getStartOfToday() {
   const now = new Date()
@@ -143,36 +144,17 @@ export const MainPage: FunctionComponent = () => {
     { enabled: Boolean(district) }
   )
 
-  const [highlightedPharmacy, sethighlightedPharmacy] =
-    useState<Pharmacy | null>(null)
-
-  const onMarkerClick = useCallback(
-    (payload: Pharmacy) => {
-      if (highlightedPharmacy && highlightedPharmacy.id === payload.id) {
-        sethighlightedPharmacy(null)
-      } else {
-        sethighlightedPharmacy(payload)
-      }
-    },
-    [highlightedPharmacy]
-  )
-
   const renderAddress = () => {
     if (!address) {
       return <div>Введите адрес вручную</div>
     }
 
     return (
-      <div>
-        <AddressInput defaultValue={address} />
+      <div className="h-[5vh]">
+        <AddressField />
       </div>
     )
   }
-
-  const highlightedPharmacyMemo = useMemo(
-    () => highlightedPharmacy,
-    [highlightedPharmacy]
-  )
 
   const renderMap = () => {
     if (!latLng) {
@@ -184,42 +166,15 @@ export const MainPage: FunctionComponent = () => {
     }
 
     return (
-      <PharmaciesMap
-        pharmacies={data}
-        location={latLng}
-        onMarkerClick={onMarkerClick}
-        highlightedPharmacy={highlightedPharmacyMemo}
-      />
+      <PharmaciesMap pharmacies={data} location={latLng} distance={distance} />
     )
   }
 
-  const handleClick = useCallback(() => {
-    if (highlightedPharmacy) {
-      window.open(
-        `https://maps.google.com/?daddr=${highlightedPharmacy.lat},${highlightedPharmacy.lng}`
-      )
-    }
-  }, [highlightedPharmacy])
-
   return (
-    <div>
+    <div className="bg-white dark:bg-slate-800 h-screen dark:text-zinc-300">
       <>
         {renderAddress()}
         {renderMap()}
-        <div>
-          {highlightedPharmacy && (
-            <Card
-              name={highlightedPharmacy.name}
-              distance={distance}
-              stars={5}
-              imgUrl={
-                'https://timekariyer.com/dimg/urun/30084203452852030800eczane.jpg'
-              }
-              address={highlightedPharmacy.address}
-              onClick={handleClick}
-            />
-          )}
-        </div>
       </>
     </div>
   )

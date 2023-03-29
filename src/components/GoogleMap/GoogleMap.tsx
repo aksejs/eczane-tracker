@@ -47,7 +47,7 @@ export default function GoogleMap({
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-[95vh]">
       <Wrapper apiKey={apiKey} render={render}>
         {some && latLng && (
           <DistanceMatrixService
