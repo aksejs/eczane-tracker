@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { ImStarFull, ImStarHalf } from 'react-icons/im'
 
-import defaultImage from '@/assets/eczane-default.jpg'
+import defaultImage from '@app/assets/eczane-default.jpg'
 
 interface CardProps {
   name: string

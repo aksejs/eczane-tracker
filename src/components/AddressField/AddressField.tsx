@@ -2,10 +2,10 @@ import { Fragment, useContext, useEffect, useRef, useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
-import { functions } from '@/config/firebase'
-import { Prediction, isLatLngLiteral } from '@/config/types'
+import { functions } from '@app/config/firebase'
+import { Prediction, isLatLngLiteral } from '@app/config/types'
 import _ from 'lodash'
-import { AddressContext } from '@/store/AddressContext'
+import { AddressContext } from '@app/store/AddressContext'
 
 interface Address {
   placeId?: string

@@ -1,12 +1,11 @@
-import { GOOGLE_API_KEY } from '@/config/contants'
-import { Address, Pharmacy, isLatLngLiteral } from '@/config/types'
-import GoogleMap from '@/components/GoogleMap/GoogleMap'
+import { GOOGLE_API_KEY } from '@app/config/contants'
+import { Address, Pharmacy, isLatLngLiteral } from '@app/config/types'
+import { Card, GoogleMap } from '@app/components'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { AddressContext } from '@/store/AddressContext'
-import { Card } from '@/components/Card'
+import { AddressContext } from '@app/store/AddressContext'
 import { Timestamp, collection, query, where } from 'firebase/firestore'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
-import { db } from '@/config/firebase'
+import { db } from '@app/config/firebase'
 
 function getStartOfToday() {
   const now = new Date()

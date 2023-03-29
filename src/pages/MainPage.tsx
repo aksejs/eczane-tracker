@@ -1,19 +1,9 @@
 import { FunctionComponent, ReactNode, useContext } from 'react'
 import _ from 'lodash'
 
-import { AddressContext } from '@/store/AddressContext'
-import { PharmaciesMap } from '@/features/PharmaciesMap'
-import AddressField from '@/components/AddressField/AddressField'
-
-const PageWrapper: FunctionComponent<{ children: ReactNode }> = ({
-  children,
-}) => {
-  return (
-    <div className="bg-white dark:bg-slate-800 h-screen dark:text-zinc-300">
-      {children}
-    </div>
-  )
-}
+import { AddressContext } from '@app/store/AddressContext'
+import { PharmaciesMap } from '@app/features/PharmaciesMap'
+import { AddressField, PageWrapper } from '@app/components'
 
 export const MainPage: FunctionComponent = () => {
   const { address, latLng, distance, loading, error } =

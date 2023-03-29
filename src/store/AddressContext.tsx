@@ -7,12 +7,12 @@ import React, {
   useState,
 } from 'react'
 
-import { useGeolocation } from '../hooks/useGeolocation'
+import { useGeolocation } from '@app/hooks/useGeolocation'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
-import { functions } from '../config/firebase'
-import { Address, isLatLngLiteral } from '../config/types'
-import { useAddressCallable } from '@/hooks/useAddressCallable'
-import { GeoLocationSensorState } from '@/hooks/useGeolocationSensor'
+import { functions } from '@app/config/firebase'
+import { Address, isLatLngLiteral } from '@app/config/types'
+import { useAddressCallable } from '@app/hooks/useAddressCallable'
+import { GeoLocationSensorState } from '@app/hooks/useGeolocationSensor'
 
 export interface Location {
   lat: number
