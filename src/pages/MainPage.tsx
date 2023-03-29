@@ -13,7 +13,7 @@ function getStartOfToday() {
   const now = new Date()
   now.setHours(0, 0, 0, 0)
   const timestamp = Timestamp.fromDate(now)
-  return timestamp // ex. 1631246400
+  return timestamp
 }
 
 export const MainPage: FunctionComponent = () => {
@@ -47,7 +47,14 @@ export const MainPage: FunctionComponent = () => {
 
   return (
     <div className="bg-white dark:bg-slate-800 h-screen dark:text-zinc-300">
-      {address && <AddressField defaultValue={address} />}
+      {address && (
+        <AddressField
+          defaultAddress={{
+            district,
+            fullAddress: address,
+          }}
+        />
+      )}
       {renderMap()}
     </div>
   )

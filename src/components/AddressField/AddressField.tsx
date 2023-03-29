@@ -6,26 +6,25 @@ import { functions } from '@/config/firebase'
 import { Prediction } from '@/config/types'
 import _ from 'lodash'
 
-const people: Array<{ id: number; name: string }> = [
-  { id: 1, name: 'Wade Cooper' },
-  { id: 2, name: 'Arlene Mccoy' },
-  { id: 3, name: 'Devon Webb' },
-  { id: 4, name: 'Tom Cook' },
-  { id: 5, name: 'Tanya Fox' },
-  { id: 6, name: 'Hellen Schmidt' },
-]
+interface Address {
+  placeId?: string
+  fullAddress: string
+  district?: string
+}
 
 export default function AddressField({
-  defaultValue,
+  defaultAddress,
 }: {
-  defaultValue?: string
+  defaultAddress?: Address
 }) {
-  const [predictions, setPredictions] = useState<Prediction[]>([])
-  const [executeCallable, loading, error] = useHttpsCallable<any, Prediction[]>(
-    functions,
-    'searchAddressHttps'
+  const [predictions, setPredictions] = useState<Address[]>([])
+  const [executeCallable, loading, error] = useHttpsCallable<
+    any,
+    google.maps.places.AutocompletePrediction[]
+  >(functions, 'searchAddressHttps')
+  const [selected, setSelected] = useState<Address | null>(
+    defaultAddress || null
   )
-  const [selected, setSelected] = useState(defaultValue)
   const [query, setQuery] = useState('')
 
   const search = async (value: string) => {
@@ -40,7 +39,15 @@ export default function AddressField({
 
   const debouncedSearch = useRef(
     _.debounce(async (criteria) => {
-      setPredictions(await search(criteria))
+      const predictions = await search(criteria)
+
+      setPredictions(
+        predictions.map((prediction) => ({
+          placeId: prediction.place_id,
+          fullAddress: prediction.description,
+          district: prediction.terms[3].value,
+        }))
+      )
     }, 1000)
   ).current
 
@@ -57,9 +64,7 @@ export default function AddressField({
             <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
               <Combobox.Input
                 className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                displayValue={(prediction: Prediction) =>
-                  prediction.description
-                }
+                displayValue={(address: Address) => address.fullAddress}
                 onChange={(event) => {
                   setQuery(event.target.value)
                   debouncedSearch(event.target.value)
@@ -87,7 +92,7 @@ export default function AddressField({
                 ) : (
                   predictions.map((prediction) => (
                     <Combobox.Option
-                      key={prediction.place_id}
+                      key={prediction.placeId}
                       className={({ active }) =>
                         `relative cursor-default select-none py-2 pl-10 pr-4 ${
                           active ? 'bg-teal-600 text-white' : 'text-gray-900'
@@ -102,7 +107,7 @@ export default function AddressField({
                               selected ? 'font-medium' : 'font-normal'
                             }`}
                           >
-                            {prediction.description}
+                            {prediction.fullAddress}
                           </span>
                           {selected ? (
                             <span
