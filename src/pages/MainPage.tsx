@@ -1,56 +1,44 @@
-import { FunctionComponent, useContext } from 'react'
+import { FunctionComponent, ReactNode, useContext } from 'react'
 import _ from 'lodash'
-import { Timestamp, collection, query, where } from 'firebase/firestore'
-import { useFirestoreQueryData } from '@react-query-firebase/firestore'
 
 import { AddressContext } from '@/store/AddressContext'
-import { Pharmacy } from '@/config/types'
-import { db } from '@/config/firebase'
 import { PharmaciesMap } from '@/features/PharmaciesMap'
 import AddressField from '@/components/AddressField/AddressField'
 
-function getStartOfToday() {
-  const now = new Date()
-  now.setHours(0, 0, 0, 0)
-  const timestamp = Timestamp.fromDate(now)
-  return timestamp
+const PageWrapper: FunctionComponent<{ children: ReactNode }> = ({
+  children,
+}) => {
+  return (
+    <div className="bg-white dark:bg-slate-800 h-screen dark:text-zinc-300">
+      {children}
+    </div>
+  )
 }
 
 export const MainPage: FunctionComponent = () => {
-  const { address, latLng, distance } = useContext(AddressContext)
-  const ref = query<any>(
-    collection(db, 'pharmacies'),
-    where('district', '==', address?.district || 'Kadıköy'),
-    where('timestamp', '==', getStartOfToday())
-  )
+  const { address, latLng, distance, loading, error } =
+    useContext(AddressContext)
 
-  const { data } = useFirestoreQueryData<'id', Pharmacy>(
-    ['pharmacies', { district: address?.district }],
-    ref,
-    { idField: 'id', subscribe: false },
-    { enabled: Boolean(address?.district) }
-  )
+  if (loading) {
+    return <PageWrapper>Loading...</PageWrapper>
+  }
 
-  const renderMap = () => {
-    if (!latLng) {
-      return <div>Please pick location</div>
-    }
-
-    if (!data) {
-      return <div>Loading...</div>
-    }
-
-    return (
-      <PharmaciesMap pharmacies={data} location={latLng} distance={distance} />
-    )
+  if (error) {
+    return <PageWrapper>Error</PageWrapper>
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 h-screen dark:text-zinc-300">
+    <PageWrapper>
       {address?.fullAddress && address.district && (
         <AddressField defaultAddress={address} />
       )}
-      {renderMap()}
-    </div>
+      {latLng && (
+        <PharmaciesMap
+          address={address}
+          location={latLng}
+          distance={distance}
+        />
+      )}
+    </PageWrapper>
   )
 }

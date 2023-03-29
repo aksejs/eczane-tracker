@@ -1,23 +1,46 @@
 import { GOOGLE_API_KEY } from '@/config/contants'
-import { Pharmacy, isLatLngLiteral } from '@/config/types'
+import { Address, Pharmacy, isLatLngLiteral } from '@/config/types'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AddressContext } from '@/store/AddressContext'
 import { Card } from '@/components/Card'
+import { Timestamp, collection, query, where } from 'firebase/firestore'
+import { useFirestoreQueryData } from '@react-query-firebase/firestore'
+import { db } from '@/config/firebase'
+
+function getStartOfToday() {
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  const timestamp = Timestamp.fromDate(now)
+  return timestamp
+}
 
 interface PharmaciesMapProps {
-  pharmacies: Pharmacy[]
+  address?: Address
   location: google.maps.LatLngLiteral
   distance?: string
 }
 
 export function PharmaciesMap({
-  pharmacies,
   location,
+  address,
   distance,
 }: PharmaciesMapProps) {
   const [center, setCenter] = useState<google.maps.LatLngLiteral>(location)
   const [zoom, setZoom] = useState<number>(15)
+
+  const ref = query<any>(
+    collection(db, 'pharmacies'),
+    where('district', '==', address?.district || 'Kadıköy'),
+    where('timestamp', '==', getStartOfToday())
+  )
+
+  const { data, isLoading, isError } = useFirestoreQueryData<'id', Pharmacy>(
+    ['pharmacies', { district: address?.district }],
+    ref,
+    { idField: 'id', subscribe: false },
+    { enabled: Boolean(address?.district) }
+  )
 
   const [highlightedPharmacy, sethighlightedPharmacy] =
     useState<Pharmacy | null>(null)
@@ -57,13 +80,21 @@ export function PharmaciesMap({
     }
   }, [highlightedPharmacy])
 
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (isError) {
+    return <div>Failed to Pharmacies list</div>
+  }
+
   return (
     <>
       <GoogleMap
         apiKey={GOOGLE_API_KEY}
         center={center}
         zoom={zoom}
-        markers={pharmacies}
+        markers={data}
         onIdle={onIdle}
         onMarkerClick={onMarkerClick}
         highlightedPharmacy={highlightedPharmacy}

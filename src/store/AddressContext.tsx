@@ -10,7 +10,7 @@ import React, {
 import { useGeolocation } from '../hooks/useGeolocation'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import { functions } from '../config/firebase'
-import { isLatLngLiteral } from '../config/types'
+import { Address, isLatLngLiteral } from '../config/types'
 import { useAddressCallable } from '@/hooks/useAddressCallable'
 import { GeoLocationSensorState } from '@/hooks/useGeolocationSensor'
 
@@ -19,16 +19,12 @@ export interface Location {
   lng: number
 }
 
-interface Address {
-  fullAddress?: string
-  placeId?: string
-  district?: string
-}
-
 export const AddressContext = createContext<{
   address?: Address
   latLng?: google.maps.LatLngLiteral
   distance?: string
+  loading: boolean
+  error: boolean
   setDistance: (distanceValue: google.maps.Distance) => void
   setAddress: (address: {
     latLng?: google.maps.LatLngLiteral
@@ -40,16 +36,19 @@ export const AddressContext = createContext<{
   setDistance: () => {},
   setAddress: () => {},
   setLatLng: () => {},
+  loading: true,
+  error: false,
 })
 
 export const AddressContextProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
-  const { possibleAddress, possibleDistrict, geolocation } =
-    useAddressCallable()
+  const { possibleAddress, geolocation, loading, error } = useAddressCallable()
   const [state, setState] = useState<Address>()
   const [latLng, setLatLng] = useState<google.maps.LatLngLiteral>()
   const [distance, setDistance] = useState<string>()
+
+  console.log(loading)
 
   const latLngMemo = useMemo(() => {
     const literal = { lat: geolocation.latitude, lng: geolocation.longitude }
@@ -58,11 +57,7 @@ export const AddressContextProvider: React.FC<{
     }
   }, [geolocation.latitude, geolocation.longitude])
 
-  const handleSetAddress = (address: {
-    latLng?: google.maps.LatLngLiteral
-    fullAddress?: string
-    district?: string
-  }) => {
+  const handleSetAddress = (address: Address) => {
     setState((oldState) => ({ ...oldState, ...address }))
   }
 
@@ -74,13 +69,23 @@ export const AddressContextProvider: React.FC<{
     setLatLng(literal)
   }
 
-  const address: Address = useMemo(
-    () => ({
-      fullAddress: state?.fullAddress || possibleAddress,
-      district: state?.district || possibleDistrict,
-    }),
-    [state, possibleAddress, possibleDistrict]
-  )
+  const address: Address | undefined = useMemo(() => {
+    if (state) {
+      return {
+        fullAddress: state.fullAddress,
+        district: state.district,
+        placeId: state.placeId,
+      }
+    }
+
+    if (possibleAddress) {
+      return {
+        fullAddress: possibleAddress.fullAddress,
+        district: possibleAddress.district,
+        placeId: possibleAddress.placeId,
+      }
+    }
+  }, [state, possibleAddress])
 
   return (
     <AddressContext.Provider
@@ -88,6 +93,8 @@ export const AddressContextProvider: React.FC<{
         address: address,
         latLng: latLng || latLngMemo,
         distance: distance,
+        loading,
+        error,
         setDistance: handleSetDistance,
         setAddress: handleSetAddress,
         setLatLng: handleSetLatLng,

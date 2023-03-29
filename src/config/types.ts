@@ -17,8 +17,9 @@ export interface AutocompleteResponse {
 }
 
 export interface Address {
-  fullAddress: string
-  district: string
+  fullAddress?: string
+  district?: string
+  placeId?: string
 }
 
 export interface Pharmacy {
