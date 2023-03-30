@@ -48,8 +48,6 @@ export const AddressContextProvider: React.FC<{
   const [latLng, setLatLng] = useState<google.maps.LatLngLiteral>()
   const [distance, setDistance] = useState<string>()
 
-  console.log(loading)
-
   const latLngMemo = useMemo(() => {
     const literal = { lat: geolocation.latitude, lng: geolocation.longitude }
     if (isLatLngLiteral(literal)) {
@@ -86,6 +84,8 @@ export const AddressContextProvider: React.FC<{
       }
     }
   }, [state, possibleAddress])
+
+  console.log('fired')
 
   return (
     <AddressContext.Provider

@@ -1,7 +1,7 @@
 import { GOOGLE_API_KEY } from '@app/utils/contants'
 import { Address, Pharmacy, isLatLngLiteral } from '@app/utils/types'
 import { Card, GoogleMap } from '@app/components'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { AddressContext } from '@app/store/AddressContext'
 import { Timestamp, collection, query, where } from 'firebase/firestore'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
@@ -25,20 +25,54 @@ export default function PharmaciesMap({
   address,
   distance,
 }: PharmaciesMapProps) {
-  const [center, setCenter] = useState<google.maps.LatLngLiteral>(location)
-  const [zoom, setZoom] = useState<number>(15)
+  const [isExtendedQuery, setExtendedQuery] = useState(false)
 
-  const ref = query<any>(
+  const firebaseQuery = query<any>(
     collection(db, 'pharmacies'),
     where('district', '==', address?.district || 'Kadıköy'),
     where('timestamp', '==', getStartOfToday())
   )
 
-  const { data, isLoading, isError } = useFirestoreQueryData<'id', Pharmacy>(
+  const extendedFirebaseQuery = query<any>(
+    collection(db, 'pharmacies'),
+    where('timestamp', '==', getStartOfToday())
+  )
+
+  const {
+    data: filteredPharmacies,
+    isLoading: filteredLoading,
+    isError: filteredError,
+  } = useFirestoreQueryData<'id', Pharmacy>(
     ['pharmacies', { district: address?.district }],
-    ref,
+    firebaseQuery,
     { idField: 'id', subscribe: false },
-    { enabled: Boolean(address?.district) }
+    {
+      enabled: Boolean(address?.district) && !isExtendedQuery,
+      onError: () => {
+        setExtendedQuery(true)
+      },
+      onSuccess: (data) => {
+        if (!data.length) {
+          setExtendedQuery(true)
+        }
+      },
+    }
+  )
+
+  const {
+    data: extendedPharmacies,
+    isLoading: extendedLoading,
+    isError: extendedError,
+  } = useFirestoreQueryData<'id', Pharmacy>(
+    'pharmacies',
+    extendedFirebaseQuery,
+    {
+      idField: 'id',
+      subscribe: false,
+    },
+    {
+      enabled: isExtendedQuery,
+    }
   )
 
   const [highlightedPharmacy, sethighlightedPharmacy] =
@@ -55,21 +89,11 @@ export default function PharmaciesMap({
     [highlightedPharmacy]
   )
 
-  const onIdle = (map: google.maps.Map) => {
-    setZoom(map.getZoom()!)
-
-    const nextCenter = map.getCenter()
-
-    if (nextCenter) {
-      setCenter(nextCenter.toJSON())
-    }
-  }
-
-  useEffect(() => {
-    if (isLatLngLiteral(location)) {
-      setCenter(location)
-    }
-  }, [location])
+  const pharmacies = useMemo(
+    () =>
+      filteredPharmacies?.length ? filteredPharmacies : extendedPharmacies,
+    [filteredPharmacies, extendedPharmacies]
+  )
 
   const handleClick = useCallback(() => {
     if (highlightedPharmacy) {
@@ -79,22 +103,20 @@ export default function PharmaciesMap({
     }
   }, [highlightedPharmacy])
 
-  if (isLoading) {
+  if (filteredLoading || extendedLoading) {
     return <div>Loading...</div>
   }
 
-  if (isError) {
-    return <div>Failed to Pharmacies list</div>
+  if (filteredError || extendedError) {
+    return <div>Failed to load Pharmacies list</div>
   }
 
   return (
     <>
       <GoogleMap
+        latLng={location}
         apiKey={GOOGLE_API_KEY}
-        center={center}
-        zoom={zoom}
-        markers={data}
-        onIdle={onIdle}
+        markers={pharmacies}
         onMarkerClick={onMarkerClick}
         highlightedPharmacy={highlightedPharmacy}
       />

@@ -1,7 +1,7 @@
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Map } from '../Map'
-import { Pharmacy } from '@app/utils/types'
+import { Pharmacy, isLatLngLiteral } from '@app/utils/types'
 import CustomMarker from '../CustomMarker/CustomMarker'
 import GoogleMapsMarker from './GoogleMarker'
 // import DistanceMatrix from './DistanceMatrix'
@@ -16,27 +16,25 @@ const render = (status: Status) => {
 }
 
 interface GoogleMapProps {
-  onIdle?: (map: google.maps.Map) => void
   onClick?: (e: google.maps.MapMouseEvent) => void
   onMarkerClick: (payload: Pharmacy) => void
   markers?: Pharmacy[]
-  center: google.maps.LatLngLiteral
-  zoom: number
   apiKey: string
   highlightedPharmacy: Pharmacy | null
+  latLng: google.maps.LatLngLiteral
 }
 
 export default function GoogleMap({
   apiKey,
   onClick,
-  onIdle,
-  zoom,
-  center,
+  latLng,
   markers,
   onMarkerClick,
   highlightedPharmacy,
 }: GoogleMapProps) {
-  const { setDistance, latLng } = useContext(AddressContext)
+  const { setDistance } = useContext(AddressContext)
+  const [center, setCenter] = useState<google.maps.LatLngLiteral>(latLng)
+  const [zoom, setZoom] = useState<number>(15)
   const filtered = useMemo(() => {
     return markers?.filter((m) => m.lat && m.lng)
   }, [markers])
@@ -45,6 +43,22 @@ export default function GoogleMap({
     lat: +highlightedPharmacy.lat,
     lng: +highlightedPharmacy.lng,
   }
+
+  const onIdle = (map: google.maps.Map) => {
+    setZoom(map.getZoom()!)
+
+    const nextCenter = map.getCenter()
+
+    if (nextCenter) {
+      setCenter(nextCenter.toJSON())
+    }
+  }
+
+  useEffect(() => {
+    if (isLatLngLiteral(latLng)) {
+      setCenter(latLng)
+    }
+  }, [latLng])
 
   return (
     <div className="flex h-[95vh]">
