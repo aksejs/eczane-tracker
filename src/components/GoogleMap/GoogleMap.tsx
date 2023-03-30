@@ -8,12 +8,14 @@ import GoogleMapsMarker from './GoogleMarker'
 // import DistanceMatrix from './DistanceMatrix'
 import DistanceMatrixService from './DistanceMatrixService'
 import { AddressContext } from '@app/store/AddressContext'
+import { Loader } from '../Loader'
 
 const render = (status: Status) => {
   if (status === Status.FAILURE) {
     return <p>failed</p>
   }
-  return <p>loading...</p>
+
+  return <Loader>Loading map...</Loader>
 }
 
 interface GoogleMapProps {
@@ -60,7 +62,7 @@ export default function GoogleMap({
   }, [latLng])
 
   return (
-    <div className="flex h-[94%]">
+    <div className="flex h-[94%] justify-center">
       <Wrapper apiKey={GOOGLE_API_KEY} render={render}>
         {highlightedPharmacyLatLng && latLng && (
           <DistanceMatrixService

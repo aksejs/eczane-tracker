@@ -1,5 +1,5 @@
 import { Address, Pharmacy, isLatLngLiteral } from '@app/utils/types'
-import { Card, GoogleMap } from '@app/components'
+import { Card, GoogleMap, Loader } from '@app/components'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { AddressContext } from '@app/store/AddressContext'
 import { Timestamp, collection, query, where } from 'firebase/firestore'
@@ -103,7 +103,7 @@ export default function PharmaciesMap({
   }, [highlightedPharmacy])
 
   if (filteredLoading || extendedLoading) {
-    return <div>Loading...</div>
+    return <Loader>Loading map...</Loader>
   }
 
   if (filteredError || extendedError) {

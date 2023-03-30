@@ -44,6 +44,7 @@ export function useAddressCallable() {
     possibleAddress: address,
     loading: isLoading,
     error: isError,
+    geolocationDenied: Boolean(geolocation.error),
     geolocation,
   }
 }

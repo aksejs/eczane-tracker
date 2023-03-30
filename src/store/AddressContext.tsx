@@ -25,6 +25,7 @@ export const AddressContext = createContext<{
   distance?: string
   loading: boolean
   error: boolean
+  geolocationDenied: boolean
   setDistance: (distanceValue: google.maps.Distance) => void
   setAddress: (address: {
     latLng?: google.maps.LatLngLiteral
@@ -38,12 +39,14 @@ export const AddressContext = createContext<{
   setLatLng: () => {},
   loading: true,
   error: false,
+  geolocationDenied: false,
 })
 
 export const AddressContextProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
-  const { possibleAddress, geolocation, loading, error } = useAddressCallable()
+  const { possibleAddress, geolocation, loading, error, geolocationDenied } =
+    useAddressCallable()
   const [state, setState] = useState<Address>()
   const [latLng, setLatLng] = useState<google.maps.LatLngLiteral>()
   const [distance, setDistance] = useState<string>()
@@ -93,6 +96,7 @@ export const AddressContextProvider: React.FC<{
         distance: distance,
         loading,
         error,
+        geolocationDenied,
         setDistance: handleSetDistance,
         setAddress: handleSetAddress,
         setLatLng: handleSetLatLng,
