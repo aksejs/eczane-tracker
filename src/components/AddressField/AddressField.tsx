@@ -74,6 +74,7 @@ export default function AddressField({
           district: selectedValue?.district,
         })
         setLatLng(literal)
+        inputRef.current?.blur()
       }
     }
   }

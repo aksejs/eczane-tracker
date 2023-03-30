@@ -9,6 +9,7 @@ import {
 import type { ReactNode } from 'react'
 import mapStyle from './mapStyle'
 import { useDeepCompareEffectForMaps } from '../../hooks/useDeepCompare'
+import { isLatLngLiteral } from '@app/utils/types'
 
 interface MapProps extends google.maps.MapOptions {
   className: string
@@ -38,11 +39,16 @@ export default function Map({
 
   useDeepCompareEffectForMaps(() => {
     if (map) {
-      map.setOptions(options)
+      const { center, ...rest } = options
+      map.setOptions(rest)
+      if (isLatLngLiteral(center)) {
+        map.panTo(center)
+      }
     }
   }, [map, options])
 
   useEffect(() => {
+    console.log('fired')
     if (map) {
       ;['click', 'idle'].forEach((eventName) =>
         google.maps.event.clearListeners(map, eventName)
