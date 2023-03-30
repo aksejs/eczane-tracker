@@ -5,6 +5,9 @@ node_modules
 /*.log
 .env
 .firebase
-.runtimeconfig.json
+**/.runtimeconfig.json
+**/database-debug.log
+**/firebase-debug.log
+**/.firebase
 
 .DS_Store

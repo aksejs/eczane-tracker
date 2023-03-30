@@ -82,7 +82,7 @@ export default function AddressField({
     <div className="h-[6%] flex items-center justify-end">
       <div className="flex absolute z-10">
         <Combobox value={selected} onChange={handleSelect}>
-          <div className="relative my-2 mr-4 w-[50vw]">
+          <div className="relative my-2 mr-4 w-[70vw]">
             <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
               <Combobox.Input
                 className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
