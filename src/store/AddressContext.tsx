@@ -85,8 +85,6 @@ export const AddressContextProvider: React.FC<{
     }
   }, [state, possibleAddress])
 
-  console.log('fired')
-
   return (
     <AddressContext.Provider
       value={{

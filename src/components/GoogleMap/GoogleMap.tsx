@@ -1,5 +1,6 @@
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { GOOGLE_API_KEY } from '@app/utils/contants'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Map } from '../Map'
 import { Pharmacy, isLatLngLiteral } from '@app/utils/types'
 import CustomMarker from '../CustomMarker/CustomMarker'
@@ -19,13 +20,11 @@ interface GoogleMapProps {
   onClick?: (e: google.maps.MapMouseEvent) => void
   onMarkerClick: (payload: Pharmacy) => void
   markers?: Pharmacy[]
-  apiKey: string
   highlightedPharmacy: Pharmacy | null
   latLng: google.maps.LatLngLiteral
 }
 
 export default function GoogleMap({
-  apiKey,
   onClick,
   latLng,
   markers,
@@ -61,8 +60,8 @@ export default function GoogleMap({
   }, [latLng])
 
   return (
-    <div className="flex h-[95vh]">
-      <Wrapper apiKey={apiKey} render={render}>
+    <div className="flex h-[94%]">
+      <Wrapper apiKey={GOOGLE_API_KEY} render={render}>
         {highlightedPharmacyLatLng && latLng && (
           <DistanceMatrixService
             options={{

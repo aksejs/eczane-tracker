@@ -1,4 +1,3 @@
-import { GOOGLE_API_KEY } from '@app/utils/contants'
 import { Address, Pharmacy, isLatLngLiteral } from '@app/utils/types'
 import { Card, GoogleMap } from '@app/components'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -115,7 +114,6 @@ export default function PharmaciesMap({
     <>
       <GoogleMap
         latLng={location}
-        apiKey={GOOGLE_API_KEY}
         markers={pharmacies}
         onMarkerClick={onMarkerClick}
         highlightedPharmacy={highlightedPharmacy}

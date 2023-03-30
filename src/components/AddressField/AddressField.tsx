@@ -1,9 +1,9 @@
-import { Fragment, useContext, useEffect, useRef, useState } from 'react'
+import { Fragment, useContext, useRef, useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
-import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2'
+import { HiMapPin, HiCheckCircle } from 'react-icons/hi2'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import { functions } from '@app/utils/firebase'
-import { Prediction, isLatLngLiteral } from '@app/utils/types'
+import { isLatLngLiteral } from '@app/utils/types'
 import _ from 'lodash'
 import { AddressContext } from '@app/store/AddressContext'
 
@@ -20,9 +20,10 @@ export default function AddressField({
 }) {
   const [predictions, setPredictions] = useState<Address[]>([])
   const [executeSearchAddress, loading, error] = useHttpsCallable<
-    any,
+    { term: string },
     google.maps.places.AutocompletePrediction[]
   >(functions, 'searchAddressHttps')
+  const inputRef = useRef<any>()
   const [executeGetLatLng] = useHttpsCallable<any, any>(
     functions,
     'geocodePlaceIdHttps'
@@ -64,6 +65,7 @@ export default function AddressField({
     if (selectedValue?.placeId) {
       const res = await executeGetLatLng({ placeId: selectedValue.placeId })
       const literal = res?.data[0].geometry.location
+
       if (isLatLngLiteral(literal)) {
         setAddress({
           fullAddress: selectedValue?.fullAddress,
@@ -71,26 +73,32 @@ export default function AddressField({
         })
         setLatLng(literal)
       }
+
+      inputRef.current?.blur()
     }
   }
 
   return (
-    <div className="h-[5vh]">
+    <div className="h-[6%] flex items-center justify-end">
       <div className="flex absolute z-10">
         <Combobox value={selected} onChange={handleSelect}>
-          <div className="relative m-1 w-96">
+          <div className="relative my-2 mr-4 w-[50vw]">
             <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
               <Combobox.Input
                 className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
                 displayValue={(address: Address) => address.fullAddress || ''}
+                ref={inputRef}
+                onFocus={(event) => {
+                  event.target.select()
+                }}
                 onChange={(event) => {
                   setQuery(event.target.value)
                   debouncedSearch(event.target.value)
                 }}
               />
               <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                <HiChevronUpDown
-                  className="h-5 w-5 text-gray-400"
+                <HiMapPin
+                  className="h-5 w-5 text-gray-500"
                   aria-hidden="true"
                 />
               </Combobox.Button>
