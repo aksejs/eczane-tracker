@@ -1,4 +1,5 @@
 import { Fragment, useContext, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import { Combobox, Transition } from '@headlessui/react'
 import { HiMapPin, HiCheckCircle } from 'react-icons/hi2'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
@@ -19,6 +20,7 @@ export default function AddressField({
   defaultAddress?: Address
 }) {
   const [predictions, setPredictions] = useState<Address[]>([])
+  const [isBig, setIsBig] = useState(false)
   const [executeSearchAddress, loading, error] = useHttpsCallable<
     { term: string },
     google.maps.places.AutocompletePrediction[]
@@ -73,23 +75,30 @@ export default function AddressField({
         })
         setLatLng(literal)
       }
-
-      inputRef.current?.blur()
     }
   }
 
   return (
     <div className="h-[6%] flex items-center justify-end">
-      <div className="flex absolute z-10">
+      <div className="flex absolute z-10 max-w-full">
         <Combobox value={selected} onChange={handleSelect}>
-          <div className="relative my-2 mr-4 w-[70vw]">
+          <motion.div
+            className="relative my-2 mx-4"
+            animate={{
+              width: isBig ? '100vw' : '70vw',
+            }}
+          >
             <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
               <Combobox.Input
                 className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
                 displayValue={(address: Address) => address.fullAddress || ''}
                 ref={inputRef}
-                onFocus={(event) => {
-                  event.target.select()
+                autoCorrect="false"
+                onFocus={() => {
+                  setIsBig(true)
+                }}
+                onBlur={() => {
+                  setIsBig(false)
                 }}
                 onChange={(event) => {
                   setQuery(event.target.value)
@@ -154,7 +163,7 @@ export default function AddressField({
                 )}
               </Combobox.Options>
             </Transition>
-          </div>
+          </motion.div>
         </Combobox>
       </div>
     </div>
