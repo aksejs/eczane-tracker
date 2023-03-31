@@ -1,12 +1,13 @@
-import { Fragment, useContext, useRef, useState } from 'react'
+import { Fragment, useContext, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Combobox, Transition } from '@headlessui/react'
-import { HiMapPin, HiCheckCircle } from 'react-icons/hi2'
+import { HiMapPin, HiCheckCircle, HiXMark } from 'react-icons/hi2'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import { functions } from '@app/utils/firebase'
 import { isLatLngLiteral } from '@app/utils/types'
 import _ from 'lodash'
 import { AddressContext } from '@app/store/AddressContext'
+import { LanguageSelect } from '../LanguageSelect'
 
 interface Address {
   placeId?: string
@@ -48,8 +49,8 @@ export default function AddressField({
   }
 
   const debouncedSearch = useRef(
-    _.debounce(async (criteria) => {
-      const predictions = await search(criteria)
+    _.debounce(async (term) => {
+      const predictions = await search(term)
 
       setPredictions(
         predictions.map((prediction) => ({
@@ -79,92 +80,111 @@ export default function AddressField({
     }
   }
 
+  // const renderIcon = () => {
+  //   if (isFocused) {
+  //     return (
+  //       <HiXMark
+  //         onClick={() => {
+  //           setSelected({ fullAddress: '' })
+  //         }}
+  //         className="h-5 w-5 text-gray-500 cursor-pointer"
+  //         aria-hidden="true"
+  //       />
+  //     )
+  //   }
+
+  //   return <HiMapPin className="h-5 w-5 text-gray-500" aria-hidden="true" />
+  // }
+
   return (
-    <div className="h-[6%] flex items-center justify-end">
-      <div className="flex absolute z-10 max-w-full">
+    <div className="flex items-center justify-start h-full">
+      <div className="flex absolute z-20 max-w-full">
         <Combobox value={selected} onChange={handleSelect}>
-          <motion.div
-            className="relative my-2 mx-4"
-            animate={{
-              width: isBig ? '100vw' : '70vw',
-            }}
-          >
-            <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-              <Combobox.Input
-                className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                displayValue={(address: Address) => address.fullAddress || ''}
-                ref={inputRef}
-                autoCorrect="false"
-                onFocus={() => {
-                  setIsBig(true)
-                }}
-                onBlur={() => {
-                  setIsBig(false)
-                }}
-                onChange={(event) => {
-                  setQuery(event.target.value)
-                  debouncedSearch(event.target.value)
-                }}
-              />
-              <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                <HiMapPin
-                  className="h-5 w-5 text-gray-500"
-                  aria-hidden="true"
-                />
-              </Combobox.Button>
-            </div>
-            <Transition
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-              afterLeave={() => setQuery('')}
+          {() => (
+            <motion.div
+              className="relative my-2 mx-4"
+              animate={{
+                width: isBig ? '100vw' : '70vw',
+              }}
             >
-              <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {predictions.length === 0 && query !== '' ? (
-                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                    Loading...
-                  </div>
-                ) : (
-                  predictions.map((prediction) => (
-                    <Combobox.Option
-                      key={prediction.placeId}
-                      className={({ active }) =>
-                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                          active ? 'bg-teal-600 text-white' : 'text-gray-900'
-                        }`
-                      }
-                      value={prediction}
-                    >
-                      {({ selected, active }) => (
-                        <>
-                          <span
-                            className={`block truncate ${
-                              selected ? 'font-medium' : 'font-normal'
-                            }`}
-                          >
-                            {prediction.fullAddress}
-                          </span>
-                          {selected ? (
+              <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                <Combobox.Input
+                  className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0 focus-visible: outline-none"
+                  displayValue={(address: Address) => address.fullAddress || ''}
+                  ref={inputRef}
+                  autoCorrect="false"
+                  autoComplete="false"
+                  onFocus={() => {
+                    setIsBig(true)
+                  }}
+                  onBlur={() => {
+                    setIsBig(false)
+                  }}
+                  onChange={(event) => {
+                    setQuery(event.target.value)
+                    debouncedSearch(event.target.value)
+                  }}
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                  <HiMapPin
+                    className="h-5 w-5 text-gray-500"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+              <Transition
+                as={Fragment}
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+                afterLeave={() => setQuery('')}
+              >
+                <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm focus-visible: outline-none">
+                  {predictions.length === 0 && query !== '' ? (
+                    <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                      Loading...
+                    </div>
+                  ) : (
+                    predictions.map((prediction) => (
+                      <Combobox.Option
+                        key={prediction.placeId}
+                        className={({ active }) =>
+                          `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                            active ? 'bg-teal-600 text-white' : 'text-gray-900'
+                          }`
+                        }
+                        value={prediction}
+                      >
+                        {({ selected, active }) => (
+                          <>
                             <span
-                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                active ? 'text-white' : 'text-teal-600'
+                              className={`block truncate ${
+                                selected ? 'font-medium' : 'font-normal'
                               }`}
                             >
-                              <HiCheckCircle
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
+                              {prediction.fullAddress}
                             </span>
-                          ) : null}
-                        </>
-                      )}
-                    </Combobox.Option>
-                  ))
-                )}
-              </Combobox.Options>
-            </Transition>
-          </motion.div>
+                            {selected ? (
+                              <span
+                                className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                  active ? 'text-white' : 'text-teal-600'
+                                }`}
+                              >
+                                <HiCheckCircle
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            ) : null}
+                          </>
+                        )}
+                      </Combobox.Option>
+                    ))
+                  )}
+                </Combobox.Options>
+              </Transition>
+            </motion.div>
+          )}
         </Combobox>
       </div>
     </div>
