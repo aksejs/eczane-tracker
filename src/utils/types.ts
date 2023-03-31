@@ -42,3 +42,10 @@ export const isLatLngOrLatLngLiteral = (
   obj: any
 ): obj is google.maps.LatLng | google.maps.LatLngLiteral =>
   obj instanceof google.maps.LatLng || isLatLngLiteral(obj)
+
+export enum LanguageKind {
+  EN = 'EN',
+  TR = 'TR',
+  RU = 'RU',
+  UA = 'UA',
+}

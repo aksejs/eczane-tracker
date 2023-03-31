@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 import { MainPage } from './pages/MainPage'
 import { AddressContextProvider } from './store/AddressContext'
+import { LanguageContextProvider } from './store/LanguageContext'
 
 import './globals.css'
 
@@ -13,8 +14,10 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AddressContextProvider>
-        <MainPage />
-        <ReactQueryDevtools />
+        <LanguageContextProvider>
+          <MainPage />
+          <ReactQueryDevtools />
+        </LanguageContextProvider>
       </AddressContextProvider>
     </QueryClientProvider>
   )

@@ -2,6 +2,9 @@ import { motion } from 'framer-motion'
 import { ImStarFull, ImStarHalf } from 'react-icons/im'
 
 import defaultImage from '@app/assets/eczane-default.jpg'
+import { useContext } from 'react'
+import { LanguageContext } from '@app/store/LanguageContext'
+import { DISTANCE_DISCTIONARY } from '@app/utils/dictionary'
 
 interface CardProps {
   name: string
@@ -20,6 +23,7 @@ export default function Card({
   distance,
   onClick,
 }: CardProps) {
+  const { currentLang } = useContext(LanguageContext)
   return (
     <motion.div
       className="absolute bottom-6 left-0 right-0 mx-auto my-0 w-80"
@@ -63,7 +67,9 @@ export default function Card({
             <span className="text-white">{stars}</span>
           </div>
           {distance && (
-            <p className="text-sm text-gray-400 mt-1">Distance: {distance}</p>
+            <p className="text-sm text-gray-400 mt-1">
+              {DISTANCE_DISCTIONARY[currentLang]}: {distance}
+            </p>
           )}
         </div>
       </div>

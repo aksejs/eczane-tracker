@@ -48,7 +48,6 @@ export default function Map({
   }, [map, options])
 
   useEffect(() => {
-    console.log('fired')
     if (map) {
       ;['click', 'idle'].forEach((eventName) =>
         google.maps.event.clearListeners(map, eventName)

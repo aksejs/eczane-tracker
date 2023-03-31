@@ -20,7 +20,7 @@ export const MainPage: FunctionComponent = () => {
 
   return (
     <PageWrapper>
-      <div className="h-[6%]">
+      <div className="h-[6%] min-h-[52px] flex items-center">
         <AddressField defaultAddress={address} />
         <LanguageSelect />
       </div>
