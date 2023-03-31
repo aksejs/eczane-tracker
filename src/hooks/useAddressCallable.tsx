@@ -4,10 +4,10 @@ import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import { functions } from '@app/utils/firebase'
 import { Address } from '@app/utils/types'
 
-import { useGeolocationSensor } from './useGeolocationSensor'
+import { useGeolocation } from './useGeolocation'
 
 export function useAddressCallable() {
-  const geolocation = useGeolocationSensor()
+  const geolocation = useGeolocation()
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
   const [address, setAddress] = useState<Address>()

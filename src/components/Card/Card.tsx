@@ -1,10 +1,11 @@
+import { useContext } from 'react'
 import { motion } from 'framer-motion'
 import { ImStarFull, ImStarHalf } from 'react-icons/im'
 
-import defaultImage from '@app/assets/eczane-default.jpg'
-import { useContext } from 'react'
 import { LanguageContext } from '@app/store/LanguageContext'
 import { DISTANCE_DISCTIONARY } from '@app/utils/dictionary'
+
+import defaultImage from '@app/assets/eczane-default.jpg'
 
 interface CardProps {
   name: string

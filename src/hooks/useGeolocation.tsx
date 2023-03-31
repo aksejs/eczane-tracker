@@ -1,26 +1,67 @@
 import { useEffect, useState } from 'react'
 
-interface UseGeolocation {
-  currentLocation?: GeolocationPosition['coords']
-  isDisabled: boolean
+export interface IGeolocationPositionError {
+  readonly code: number
+  readonly message: string
+  readonly PERMISSION_DENIED: number
+  readonly POSITION_UNAVAILABLE: number
+  readonly TIMEOUT: number
 }
 
-// todo
-export function useGeolocation(): UseGeolocation {
-  const [location, setLocation] = useState<GeolocationPosition>()
-  const [isError, setIsError] = useState(false)
+export interface GeoLocationSensorState {
+  loading: boolean
+  accuracy: number | null
+  altitude: number | null
+  altitudeAccuracy: number | null
+  heading: number | null
+  latitude: number | null
+  longitude: number | null
+  speed: number | null
+  timestamp: number | null
+  error?: Error | IGeolocationPositionError
+}
+
+export const useGeolocation = (
+  options?: PositionOptions
+): GeoLocationSensorState => {
+  const [state, setState] = useState<GeoLocationSensorState>({
+    loading: true,
+    accuracy: null,
+    altitude: null,
+    altitudeAccuracy: null,
+    heading: null,
+    latitude: null,
+    longitude: null,
+    speed: null,
+    timestamp: Date.now(),
+  })
+  let mounted = true
+
+  const onEvent = (event: any) => {
+    if (mounted) {
+      setState({
+        loading: false,
+        accuracy: event.coords.accuracy,
+        altitude: event.coords.altitude,
+        altitudeAccuracy: event.coords.altitudeAccuracy,
+        heading: event.coords.heading,
+        latitude: event.coords.latitude,
+        longitude: event.coords.longitude,
+        speed: event.coords.speed,
+        timestamp: event.timestamp,
+      })
+    }
+  }
+  const onEventError = (error: IGeolocationPositionError) =>
+    mounted && setState((oldState) => ({ ...oldState, loading: false, error }))
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocation(position)
-      },
-      () => setIsError(true)
-    )
+    navigator.geolocation.getCurrentPosition(onEvent, onEventError, options)
+
+    return () => {
+      mounted = false
+    }
   }, [])
 
-  return {
-    currentLocation: location?.coords,
-    isDisabled: isError,
-  }
+  return state
 }

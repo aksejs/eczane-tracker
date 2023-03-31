@@ -1,13 +1,13 @@
-import { Fragment, useContext, useMemo, useRef, useState } from 'react'
+import { Fragment, useContext, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Combobox, Transition } from '@headlessui/react'
 import { HiMapPin, HiCheckCircle, HiXMark } from 'react-icons/hi2'
 import { useHttpsCallable } from 'react-firebase-hooks/functions'
+import _ from 'lodash'
+
 import { functions } from '@app/utils/firebase'
 import { isLatLngLiteral } from '@app/utils/types'
-import _ from 'lodash'
 import { AddressContext } from '@app/store/AddressContext'
-import { LanguageSelect } from '../LanguageSelect'
 
 interface Address {
   placeId?: string

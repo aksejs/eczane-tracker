@@ -1,9 +1,9 @@
-import { Address, Pharmacy, isLatLngLiteral } from '@app/utils/types'
-import { Card, GoogleMap, Loader } from '@app/components'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { AddressContext } from '@app/store/AddressContext'
+import { useCallback, useMemo, useState } from 'react'
 import { Timestamp, collection, query, where } from 'firebase/firestore'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
+
+import { Address, Pharmacy } from '@app/utils/types'
+import { Card, GoogleMap, Loader } from '@app/components'
 import { db } from '@app/utils/firebase'
 
 function getStartOfToday() {

@@ -1,5 +1,6 @@
-import { LanguageKind } from '@app/utils/types'
 import { createContext, useState } from 'react'
+
+import { LanguageKind } from '@app/utils/types'
 
 export const LanguageContext = createContext<{
   currentLang: LanguageKind

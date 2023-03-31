@@ -1,6 +1,7 @@
-import { Fragment, useContext, useState } from 'react'
+import { Fragment, useContext } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2'
+
 import { LanguageKind } from '@app/utils/types'
 import { LanguageContext } from '@app/store/LanguageContext'
 

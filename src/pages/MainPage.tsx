@@ -1,12 +1,11 @@
 import { FunctionComponent, useContext } from 'react'
-import _, { add } from 'lodash'
 
 import { AddressContext } from '@app/store/AddressContext'
 import { Pharmacies } from '@app/components/Phamracies'
 import { AddressField, PageWrapper, Loader } from '@app/components'
 import { LanguageSelect } from '@app/components/LanguageSelect'
 
-export const MainPage: FunctionComponent = () => {
+export function MainPage() {
   const { address, latLng, distance, loading, error } =
     useContext(AddressContext)
 

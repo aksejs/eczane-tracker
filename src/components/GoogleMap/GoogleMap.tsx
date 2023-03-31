@@ -1,14 +1,15 @@
-import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { GOOGLE_API_KEY } from '@app/utils/contants'
 import { useContext, useEffect, useMemo, useState } from 'react'
-import { Map } from '../Map'
+import { Status, Wrapper } from '@googlemaps/react-wrapper'
+
+import { GOOGLE_API_KEY } from '@app/utils/contants'
 import { Pharmacy, isLatLngLiteral } from '@app/utils/types'
-import CustomMarker from '../CustomMarker/CustomMarker'
-import GoogleMapsMarker from './GoogleMarker'
-// import DistanceMatrix from './DistanceMatrix'
-import DistanceMatrixService from './DistanceMatrixService'
 import { AddressContext } from '@app/store/AddressContext'
+
+import GoogleMapsMarker from './GoogleMarker'
+import DistanceMatrixService from './DistanceMatrixService'
+import { Map } from '../Map'
 import { Loader } from '../Loader'
+import { CustomMarker } from '../CustomMarker'
 
 const render = (status: Status) => {
   if (status === Status.FAILURE) {

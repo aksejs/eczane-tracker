@@ -1,1 +1,1 @@
-export { default } from './CustomMarker'
+export { default as CustomMarker } from './CustomMarker'

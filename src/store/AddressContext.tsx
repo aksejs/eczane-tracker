@@ -1,18 +1,7 @@
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { createContext, useMemo, useState } from 'react'
 
-import { useGeolocation } from '@app/hooks/useGeolocation'
-import { useHttpsCallable } from 'react-firebase-hooks/functions'
-import { functions } from '@app/utils/firebase'
 import { Address, isLatLngLiteral } from '@app/utils/types'
 import { useAddressCallable } from '@app/hooks/useAddressCallable'
-import { GeoLocationSensorState } from '@app/hooks/useGeolocationSensor'
 
 export interface Location {
   lat: number
