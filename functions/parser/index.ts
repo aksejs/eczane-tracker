@@ -96,7 +96,7 @@ const parseData = async (dateString: string) => {
 
 let arr: string[] = []
 
-for (let i = 0; i < 21; i++) {
+for (let i = 0; i < 8; i++) {
   let day = new Date()
   day.setDate(day.getDate() + i)
   arr.push(day.toLocaleDateString())
