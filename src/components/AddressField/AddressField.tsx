@@ -112,8 +112,8 @@ export default function AddressField({
                   className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0 focus-visible: outline-none"
                   displayValue={(address: Address) => address.fullAddress || ''}
                   ref={inputRef}
-                  autoCorrect="false"
-                  autoComplete="false"
+                  autoCorrect="off"
+                  autoComplete="off"
                   onFocus={() => {
                     setIsBig(true)
                   }}

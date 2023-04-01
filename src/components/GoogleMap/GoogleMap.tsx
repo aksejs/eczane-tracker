@@ -16,7 +16,7 @@ const render = (status: Status) => {
     return <p>failed</p>
   }
 
-  return <Loader>Loading map...</Loader>
+  return <Loader />
 }
 
 interface GoogleMapProps {

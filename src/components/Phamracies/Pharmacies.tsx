@@ -102,13 +102,13 @@ export default function PharmaciesMap({
     }
   }, [highlightedPharmacy])
 
-  if (filteredLoading || extendedLoading) {
-    return <Loader>Loading map...</Loader>
-  }
+  // if (filteredLoading || extendedLoading) {
+  //   return <Loader>Loading map...</Loader>
+  // }
 
-  if (filteredError || extendedError) {
-    return <div>Failed to load Pharmacies list</div>
-  }
+  // if (filteredError || extendedError) {
+  //   return <div>Failed to load Pharmacies list</div>
+  // }
 
   return (
     <>

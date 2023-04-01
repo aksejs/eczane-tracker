@@ -12,7 +12,7 @@ export function MainPage() {
   if (loading || !address) {
     return (
       <PageWrapper>
-        <Loader>Loading...</Loader>
+        <Loader />
       </PageWrapper>
     )
   }
