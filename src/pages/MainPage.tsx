@@ -6,8 +6,7 @@ import { AddressField, PageWrapper, Loader } from '@app/components'
 import { LanguageSelect } from '@app/components/LanguageSelect'
 
 export function MainPage() {
-  const { address, latLng, distance, loading, error } =
-    useContext(AddressContext)
+  const { address, latLng, distance, loading } = useContext(AddressContext)
 
   if (loading || !address) {
     return (
