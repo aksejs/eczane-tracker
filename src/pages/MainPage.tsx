@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext } from 'react'
+import { useContext } from 'react'
 
 import { AddressContext } from '@app/store/AddressContext'
 import { Pharmacies } from '@app/components/Phamracies'

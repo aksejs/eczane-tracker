@@ -12,7 +12,6 @@
     "prettier": "prettier --write '**/*.{ts,tsx,json,js,jsx}'"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
     "@googlemaps/react-wrapper": "^1.1.35",
     "@headlessui/react": "^1.7.13",
     "@react-query-firebase/firestore": "^1.0.0-dev.7",
