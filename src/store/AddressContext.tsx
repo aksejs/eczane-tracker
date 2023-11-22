@@ -8,6 +8,12 @@ export interface Location {
   lng: number
 }
 
+const INITIAL_ADDRESS: Address = {
+  fullAddress:
+    'Sultan Ahmet, Ayasofya Meydanı No:1, 34122 Fatih/İstanbul, Turkey',
+  district: 'fatih',
+}
+
 export const AddressContext = createContext<{
   address?: Address
   latLng?: google.maps.LatLngLiteral
@@ -36,7 +42,7 @@ export const AddressContextProvider: React.FC<{
 }> = ({ children }) => {
   const { possibleAddress, geolocation, loading, error, geolocationDenied } =
     useAddressCallable()
-  const [state, setState] = useState<Address>()
+  const [state, setState] = useState<Address>(INITIAL_ADDRESS)
   const [latLng, setLatLng] = useState<google.maps.LatLngLiteral>()
   const [distance, setDistance] = useState<string>()
 
@@ -60,20 +66,18 @@ export const AddressContextProvider: React.FC<{
   }
 
   const address: Address | undefined = useMemo(() => {
-    if (state) {
-      return {
-        fullAddress: state.fullAddress,
-        district: state.district,
-        placeId: state.placeId,
-      }
-    }
-
     if (possibleAddress) {
       return {
         fullAddress: possibleAddress.fullAddress,
         district: possibleAddress.district,
         placeId: possibleAddress.placeId,
       }
+    }
+
+    return {
+      fullAddress: state.fullAddress,
+      district: state.district,
+      placeId: state.placeId,
     }
   }, [state, possibleAddress])
 
