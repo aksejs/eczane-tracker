@@ -1,20 +1,45 @@
 import puppeteer from 'puppeteer'
-import { getFirestore, addDoc, collection, Timestamp } from 'firebase/firestore'
-import { initializeApp } from 'firebase/app'
+import { credential } from 'firebase-admin'
+import { getFirestore, Timestamp } from 'firebase-admin/firestore'
+import { initializeApp, applicationDefault, cert } from 'firebase-admin/app'
+import serviceAccount from '../service-account-credentials.json'
 
 process.setMaxListeners(0)
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyB45WnKQYSL97gnA2w2f6LJuGjfuJDOPbw',
-  authDomain: 'eczane-tracker.firebaseapp.com',
-  projectId: 'eczane-tracker',
-  storageBucket: 'eczane-tracker.appspot.com',
-  messagingSenderId: '662266221623',
-  appId: '1:662266221623:web:b8b0c7442b9b1a4cf2dbb2',
+// const firebaseConfig = {
+//   apiKey: 'AIzaSyB45WnKQYSL97gnA2w2f6LJuGjfuJDOPbw',
+//   authDomain: 'eczane-tracker.firebaseapp.com',
+//   projectId: 'eczane-tracker',
+//   storageBucket: 'eczane-tracker.appspot.com',
+//   messagingSenderId: '662266221623',
+//   appId: '1:662266221623:web:b8b0c7442b9b1a4cf2dbb2',
+// }
+
+type Pharmacy = {
+  name: string
+  district: string
+  address: string
+  tel: string
+  other: string
+  date: string
+  lat: number
+  lng: number
 }
 
-const app = initializeApp(firebaseConfig)
-const db = getFirestore(app)
+const mock: Pharmacy = {
+  name: 'SÜLÜNTEPE',
+  district: 'Pendik',
+  address: 'SÜLÜNTEPE MAH. ABDURRAHMAN GAZİ CAD. NO: 3/A',
+  tel: '0 - (216) 378 - 9498',
+  other: 'Haritada Göster',
+  date: '05/12/2023',
+  lat: 40.9142,
+  lng: 29.2832,
+} satisfies Pharmacy
+
+//@ts-ignore
+initializeApp({ credential: credential.cert(serviceAccount) })
+const db = getFirestore()
 
 function dateStringToTimestamp(dateString: string) {
   const dateParts = dateString.split('/')
@@ -29,9 +54,9 @@ function delay(time: number) {
   })
 }
 
-const setData = async (data: Array<any>) => {
+const setData = async (data: Array<Pharmacy>) => {
   data.forEach(async (item) => {
-    await addDoc(collection(db, 'pharmacies'), item)
+    await db.collection('pharmacies').add(item)
   })
 }
 
@@ -89,6 +114,8 @@ const parseData = async (dateString: string) => {
 
   await browser.close()
 
+  console.log(data)
+
   if (data) {
     setData(data)
   }
@@ -96,7 +123,7 @@ const parseData = async (dateString: string) => {
 
 let arr: string[] = []
 
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < 3; i++) {
   let day = new Date()
   day.setDate(day.getDate() + i)
   arr.push(day.toLocaleDateString())

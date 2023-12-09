@@ -1,5 +1,8 @@
 import * as admin from 'firebase-admin'
-admin.initializeApp()
+import serviceAccount from '../service-account-credentials.json'
+
+//@ts-ignore
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) })
 
 import parsePharmaciesFunction from './functions/parsePharmacies'
 import searchAddressHttpsFunction from './functions/searchAddressHttps'
