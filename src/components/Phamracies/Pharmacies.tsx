@@ -1,16 +1,15 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Timestamp, collection, query, where } from 'firebase/firestore'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
-
 import { Address, Pharmacy } from '@app/utils/types'
 import { Card, GoogleMap, Loader } from '@app/components'
 import { db } from '@app/utils/firebase'
 
-function getStartOfToday() {
+function getStartOfToday(): Timestamp {
   const now = new Date()
   now.setHours(0, 0, 0, 0)
-  const timestamp = Timestamp.fromDate(now)
-  return timestamp
+
+  return Timestamp.fromDate(now)
 }
 
 interface PharmaciesMapProps {
@@ -26,16 +25,20 @@ export default function PharmaciesMap({
 }: PharmaciesMapProps) {
   const [isExtendedQuery, setExtendedQuery] = useState(false)
 
-  const firebaseQuery = query<any>(
-    collection(db, 'pharmacies'),
-    where('district', '==', address?.district || 'Kadıköy'),
-    where('timestamp', '==', getStartOfToday())
-  )
+  const firebaseQuery = useMemo(() => {
+    return query<any>(
+      collection(db, 'pharmacies'),
+      where('district', '==', address?.district || 'Kadıköy'),
+      where('timestamp', '==', getStartOfToday())
+    )
+  }, [address?.district])
 
-  const extendedFirebaseQuery = query<any>(
-    collection(db, 'pharmacies'),
-    where('timestamp', '==', getStartOfToday())
-  )
+  const extendedFirebaseQuery = useMemo(() => {
+    return query<any>(
+      collection(db, 'pharmacies'),
+      where('timestamp', '==', getStartOfToday())
+    )
+  }, [])
 
   const {
     data: filteredPharmacies,
@@ -74,19 +77,12 @@ export default function PharmaciesMap({
     }
   )
 
-  const [highlightedPharmacy, sethighlightedPharmacy] =
+  const [highlightedPharmacy, setHighlightedPharmacy] =
     useState<Pharmacy | null>(null)
 
-  const onMarkerClick = useCallback(
-    (payload: Pharmacy) => {
-      if (highlightedPharmacy && highlightedPharmacy.id === payload.id) {
-        sethighlightedPharmacy(null)
-      } else {
-        sethighlightedPharmacy(payload)
-      }
-    },
-    [highlightedPharmacy]
-  )
+  const onMarkerClick = useCallback((payload: Pharmacy) => {
+    setHighlightedPharmacy((prev) => (prev?.id === payload.id ? null : payload))
+  }, [])
 
   const pharmacies = useMemo(
     () =>
@@ -103,11 +99,11 @@ export default function PharmaciesMap({
   }, [highlightedPharmacy])
 
   // if (filteredLoading || extendedLoading) {
-  //   return <Loader>Loading map...</Loader>
+  //   return <Loader>Loading map...</Loader>;
   // }
 
   // if (filteredError || extendedError) {
-  //   return <div>Failed to load Pharmacies list</div>
+  //   return <div>Failed to load Pharmacies list</div>;
   // }
 
   return (

@@ -1,7 +1,9 @@
 import React, { createContext, useMemo, useState } from 'react'
-
+import { useQuery } from 'react-query'
+import { httpsCallable } from 'firebase/functions'
+import { functions } from '@app/utils/firebase'
 import { Address, isLatLngLiteral } from '@app/utils/types'
-import { useAddressCallable } from '@app/hooks/useAddressCallable'
+import { useGeolocation } from '@app/hooks/useGeolocation'
 
 export interface Location {
   lat: number
@@ -14,7 +16,7 @@ const INITIAL_ADDRESS: Address = {
   district: 'fatih',
 }
 
-export const AddressContext = createContext<{
+interface AddressContextProps {
   address?: Address
   latLng?: google.maps.LatLngLiteral
   distance?: string
@@ -28,7 +30,9 @@ export const AddressContext = createContext<{
     district?: string
   }) => void
   setLatLng: (literal: google.maps.LatLngLiteral) => void
-}>({
+}
+
+export const AddressContext = createContext<AddressContextProps>({
   setDistance: () => {},
   setAddress: () => {},
   setLatLng: () => {},
@@ -40,21 +44,45 @@ export const AddressContext = createContext<{
 export const AddressContextProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
-  const { possibleAddress, geolocation, loading, error, geolocationDenied } =
-    useAddressCallable()
+  const geolocation = useGeolocation()
   const [state, setState] = useState<Address>(INITIAL_ADDRESS)
   const [latLng, setLatLng] = useState<google.maps.LatLngLiteral>()
   const [distance, setDistance] = useState<string>()
 
+  const geocodeAddress = async () => {
+    const res = await httpsCallable<
+      { lat: number; lng: number },
+      google.maps.GeocoderResponse['results']
+    >(
+      functions,
+      'geocodeAddressHttps'
+    )({
+      lat: geolocation.latitude as number,
+      lng: geolocation.longitude as number,
+    })
+
+    return res.data[0]
+  }
+
+  const { isError, isLoading } = useQuery<
+    google.maps.GeocoderResponse['results'][0]
+  >('geocodeAddressHttps', geocodeAddress, {
+    enabled: !!geolocation.latitude && !!geolocation.longitude,
+    onSuccess: (data) =>
+      setState({
+        fullAddress: data.formatted_address,
+        district: data.address_components[3].long_name,
+        placeId: data.place_id,
+      }),
+  })
+
   const latLngMemo = useMemo(() => {
     const literal = { lat: geolocation.latitude, lng: geolocation.longitude }
-    if (isLatLngLiteral(literal)) {
-      return literal
-    }
+    return isLatLngLiteral(literal) ? literal : undefined
   }, [geolocation.latitude, geolocation.longitude])
 
   const handleSetAddress = (address: Address) => {
-    setState((oldState) => ({ ...oldState, ...address }))
+    setState(address)
   }
 
   const handleSetDistance = (distanceValue: google.maps.Distance) => {
@@ -65,36 +93,20 @@ export const AddressContextProvider: React.FC<{
     setLatLng(literal)
   }
 
-  const address: Address | undefined = useMemo(() => {
-    if (possibleAddress) {
-      return {
-        fullAddress: possibleAddress.fullAddress,
-        district: possibleAddress.district,
-        placeId: possibleAddress.placeId,
-      }
-    }
-
-    return {
-      fullAddress: state.fullAddress,
-      district: state.district,
-      placeId: state.placeId,
-    }
-  }, [state, possibleAddress])
+  const addressContextValue: AddressContextProps = {
+    address: state,
+    latLng: latLng || latLngMemo,
+    distance,
+    loading: isLoading,
+    error: isError,
+    geolocationDenied: Boolean(geolocation.error),
+    setDistance: handleSetDistance,
+    setAddress: handleSetAddress,
+    setLatLng: handleSetLatLng,
+  }
 
   return (
-    <AddressContext.Provider
-      value={{
-        address: address,
-        latLng: latLng || latLngMemo,
-        distance: distance,
-        loading,
-        error,
-        geolocationDenied,
-        setDistance: handleSetDistance,
-        setAddress: handleSetAddress,
-        setLatLng: handleSetLatLng,
-      }}
-    >
+    <AddressContext.Provider value={addressContextValue}>
       {children}
     </AddressContext.Provider>
   )
