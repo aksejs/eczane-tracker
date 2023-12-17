@@ -34,7 +34,6 @@ export default function GoogleMap({
   onMarkerClick,
   highlightedPharmacy,
 }: GoogleMapProps) {
-  const { setDistance } = useContext(AddressContext)
   const [center, setCenter] = useState<google.maps.LatLngLiteral>(latLng)
   const [zoom, setZoom] = useState<number>(15)
   const filtered = useMemo(() => {
@@ -65,20 +64,6 @@ export default function GoogleMap({
   return (
     <div className="flex h-[94%] justify-center">
       <Wrapper apiKey={GOOGLE_API_KEY} render={render}>
-        {highlightedPharmacyLatLng && latLng && (
-          <DistanceMatrixService
-            options={{
-              origins: [latLng],
-              destinations: [highlightedPharmacyLatLng],
-              travelMode: google.maps.TravelMode.WALKING,
-            }}
-            callback={(res) => {
-              if (res) {
-                setDistance(res?.rows[0].elements[0].distance)
-              }
-            }}
-          />
-        )}
         <Map
           className="grow h-screen"
           gestureHandling="greedy"
@@ -94,10 +79,10 @@ export default function GoogleMap({
           zoomControl={false}
           clickableIcons={false}
         >
-          <GoogleMapsMarker key={latLng?.lat} position={latLng} />
+          <GoogleMapsMarker key={latLng.lat} position={latLng} />
           {filtered?.map((pharmacy) => (
             <CustomMarker
-              key={pharmacy.id}
+              key={pharmacy.address}
               pharmacy={pharmacy}
               onClick={onMarkerClick}
               highlight={pharmacy.id === highlightedPharmacy?.id}

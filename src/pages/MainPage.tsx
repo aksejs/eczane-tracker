@@ -6,7 +6,7 @@ import { AddressField, PageWrapper, Loader } from '@app/components'
 import { LanguageSelect } from '@app/components/LanguageSelect'
 
 export function MainPage() {
-  const { address, latLng, distance, loading } = useContext(AddressContext)
+  const { address, loading } = useContext(AddressContext)
 
   if (loading || !address) {
     return (
@@ -22,9 +22,7 @@ export function MainPage() {
         <AddressField defaultAddress={address} />
         <LanguageSelect />
       </div>
-      {latLng && (
-        <Pharmacies address={address} location={latLng} distance={distance} />
-      )}
+      {address.location && <Pharmacies address={address} />}
     </PageWrapper>
   )
 }

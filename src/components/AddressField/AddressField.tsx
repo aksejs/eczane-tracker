@@ -6,33 +6,31 @@ import { useHttpsCallable } from 'react-firebase-hooks/functions'
 import _ from 'lodash'
 
 import { functions } from '@app/utils/firebase'
-import { isLatLngLiteral } from '@app/utils/types'
+import { Address, ApiGeocodeResponse, isLatLngLiteral } from '@app/utils/types'
 import { AddressContext } from '@app/store/AddressContext'
-
-interface Address {
-  placeId?: string
-  fullAddress?: string
-  district?: string
-}
 
 export default function AddressField({
   defaultAddress,
 }: {
   defaultAddress?: Address
 }) {
-  const [predictions, setPredictions] = useState<Address[]>([])
+  const [predictions, setPredictions] = useState<
+    { fullAddress: string; placeId: string; district: string }[]
+  >([])
   const [isBig, setIsBig] = useState(false)
   const [executeSearchAddress, loading, error] = useHttpsCallable<
     { term: string },
     google.maps.places.AutocompletePrediction[]
   >(functions, 'searchAddressHttps')
   const inputRef = useRef<any>()
-  const [executeGetLatLng] = useHttpsCallable<any, any>(
-    functions,
-    'geocodePlaceIdHttps'
-  )
+  const [executeGetLatLng] = useHttpsCallable<
+    {
+      placeId: string
+    },
+    ApiGeocodeResponse
+  >(functions, 'geocodeAddressHttps')
 
-  const { setAddress, setLatLng } = useContext(AddressContext)
+  const { setAddress } = useContext(AddressContext)
   const [selected, setSelected] = useState<Address | null>(
     defaultAddress || null
   )
@@ -56,7 +54,7 @@ export default function AddressField({
         predictions.map((prediction) => ({
           placeId: prediction.place_id,
           fullAddress: prediction.description,
-          district: prediction.terms[3].value,
+          district: prediction.terms[3]?.value,
         }))
       )
     }, 1000)
@@ -67,14 +65,15 @@ export default function AddressField({
 
     if (selectedValue?.placeId) {
       const res = await executeGetLatLng({ placeId: selectedValue.placeId })
-      const literal = res?.data[0].geometry.location
+      const literal = res?.data.location
 
       if (isLatLngLiteral(literal)) {
         setAddress({
           fullAddress: selectedValue?.fullAddress,
-          district: selectedValue?.district,
+          district: res?.data.district,
+          placeId: selectedValue.placeId,
+          location: literal,
         })
-        setLatLng(literal)
         inputRef.current?.blur()
       }
     }

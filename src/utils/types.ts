@@ -17,9 +17,11 @@ export interface AutocompleteResponse {
 }
 
 export interface Address {
-  fullAddress?: string
+  fullAddress: string
   district?: string
   placeId?: string
+  city?: string
+  location: google.maps.LatLngLiteral
 }
 
 export interface Pharmacy {
@@ -30,6 +32,7 @@ export interface Pharmacy {
   name: string
   working_hours: Timestamp
   district: string
+  distance?: number
 }
 
 export const isLatLngLiteral = (obj: any): obj is google.maps.LatLngLiteral =>
@@ -48,4 +51,12 @@ export enum LanguageKind {
   TR = 'TR',
   RU = 'RU',
   UA = 'UA',
+}
+
+export type ApiGeocodeResponse = {
+  fullAddress: string
+  city?: string
+  district?: string
+  location: google.maps.LatLngLiteral
+  placeId?: string
 }

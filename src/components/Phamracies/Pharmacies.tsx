@@ -1,9 +1,12 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Timestamp, collection, query, where } from 'firebase/firestore'
 import { useFirestoreQueryData } from '@react-query-firebase/firestore'
 import { Address, Pharmacy } from '@app/utils/types'
 import { Card, GoogleMap, Loader } from '@app/components'
-import { db } from '@app/utils/firebase'
+import { db, functions } from '@app/utils/firebase'
+import { BottomSheet } from '../BottomSheet'
+import { useQuery } from 'react-query'
+import { httpsCallableFromURL } from 'firebase/functions'
 
 function getStartOfToday(): Timestamp {
   const now = new Date()
@@ -12,116 +15,58 @@ function getStartOfToday(): Timestamp {
   return Timestamp.fromDate(now)
 }
 
+function getStartTomorrow(): Timestamp {
+  const today = new Date()
+  const tomorrow = new Date(today)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  tomorrow.setHours(0, 0, 0, 0)
+
+  return Timestamp.fromDate(tomorrow)
+}
+
 interface PharmaciesMapProps {
-  address?: Address
-  location: google.maps.LatLngLiteral
+  address: Address
   distance?: string
 }
 
-export default function PharmaciesMap({
-  location,
-  address,
-  distance,
-}: PharmaciesMapProps) {
-  const [isExtendedQuery, setExtendedQuery] = useState(false)
-
-  const firebaseQuery = useMemo(() => {
-    return query<any>(
-      collection(db, 'pharmacies'),
-      where('district', '==', address?.district || 'Kadıköy'),
-      where('timestamp', '==', getStartOfToday())
-    )
-  }, [address?.district])
-
-  const extendedFirebaseQuery = useMemo(() => {
-    return query<any>(
-      collection(db, 'pharmacies'),
-      where('timestamp', '==', getStartOfToday())
-    )
-  }, [])
-
-  const {
-    data: filteredPharmacies,
-    isLoading: filteredLoading,
-    isError: filteredError,
-  } = useFirestoreQueryData<'id', Pharmacy>(
-    ['pharmacies', { district: address?.district }],
-    firebaseQuery,
-    { idField: 'id', subscribe: false },
+const fetchPharmaciesByAdress = async (address: Address) => {
+  const res = await fetch(
+    'http://127.0.0.1:5001/eczane-tracker/europe-west1/getPharmaciesByAddress',
     {
-      enabled: Boolean(address?.district) && !isExtendedQuery,
-      onError: () => {
-        setExtendedQuery(true)
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      onSuccess: (data) => {
-        if (!data.length) {
-          setExtendedQuery(true)
-        }
-      },
+      body: JSON.stringify(address),
     }
   )
 
-  const {
-    data: extendedPharmacies,
-    isLoading: extendedLoading,
-    isError: extendedError,
-  } = useFirestoreQueryData<'id', Pharmacy>(
-    'pharmacies',
-    extendedFirebaseQuery,
-    {
-      idField: 'id',
-      subscribe: false,
-    },
-    {
-      enabled: isExtendedQuery,
-    }
-  )
+  return res
+}
 
-  const [highlightedPharmacy, setHighlightedPharmacy] =
-    useState<Pharmacy | null>(null)
+export default function PharmaciesMap({ address }: PharmaciesMapProps) {
+  const [pharmacies, setPharmacies] = useState<Pharmacy[]>([])
+  const memoizedPharmacies = useMemo(() => pharmacies, [pharmacies])
 
-  const onMarkerClick = useCallback((payload: Pharmacy) => {
-    setHighlightedPharmacy((prev) => (prev?.id === payload.id ? null : payload))
-  }, [])
-
-  const pharmacies = useMemo(
-    () =>
-      filteredPharmacies?.length ? filteredPharmacies : extendedPharmacies,
-    [filteredPharmacies, extendedPharmacies]
-  )
-
-  const handleClick = useCallback(() => {
-    if (highlightedPharmacy) {
-      window.open(
-        `https://maps.google.com/?daddr=${highlightedPharmacy.lat},${highlightedPharmacy.lng}`
-      )
-    }
-  }, [highlightedPharmacy])
-
-  // if (filteredLoading || extendedLoading) {
-  //   return <Loader>Loading map...</Loader>;
-  // }
-
-  // if (filteredError || extendedError) {
-  //   return <div>Failed to load Pharmacies list</div>;
-  // }
+  useEffect(() => {
+    fetchPharmaciesByAdress(address)
+      .then((res) => res.json())
+      .then((res) => {
+        const pharmacies: Pharmacy[] = res.results
+        setPharmacies(pharmacies)
+      })
+  }, [address.location.lat])
 
   return (
     <>
       <GoogleMap
-        latLng={location}
-        markers={pharmacies}
-        onMarkerClick={onMarkerClick}
-        highlightedPharmacy={highlightedPharmacy}
+        latLng={address.location}
+        markers={memoizedPharmacies}
+        onMarkerClick={() => {}}
+        highlightedPharmacy={null}
       />
-      {highlightedPharmacy && (
-        <Card
-          name={highlightedPharmacy.name}
-          distance={distance}
-          stars={5}
-          address={highlightedPharmacy.address}
-          onClick={handleClick}
-        />
+      {memoizedPharmacies.length && (
+        <BottomSheet pharmacies={memoizedPharmacies} />
       )}
     </>
   )

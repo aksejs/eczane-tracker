@@ -7,6 +7,7 @@ import { AddressContextProvider } from './store/AddressContext'
 import { LanguageContextProvider } from './store/LanguageContext'
 
 import './globals.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 const queryClient = new QueryClient()
 
@@ -15,7 +16,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AddressContextProvider>
         <LanguageContextProvider>
-          <MainPage />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<MainPage />} />
+            </Routes>
+          </BrowserRouter>
           <ReactQueryDevtools />
         </LanguageContextProvider>
       </AddressContextProvider>

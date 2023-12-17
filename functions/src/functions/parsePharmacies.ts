@@ -39,6 +39,7 @@ const parseData = async (dateString: string) => {
     })
   })
 
+  //@ts-ignore
   let data: Pharmacy[] = result
     .map(([name, district, tel, address, other]) => ({
       name,

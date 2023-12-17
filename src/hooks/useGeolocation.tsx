@@ -18,7 +18,8 @@ export interface GeoLocationSensorState {
   longitude: number | null
   speed: number | null
   timestamp: number | null
-  error?: Error | IGeolocationPositionError
+  error?: Error | IGeolocationPositionError | null
+  denied?: boolean
 }
 
 export const useGeolocation = (
@@ -34,6 +35,8 @@ export const useGeolocation = (
     longitude: null,
     speed: null,
     timestamp: Date.now(),
+    error: null,
+    denied: false,
   })
   let mounted = true
 
@@ -53,7 +56,13 @@ export const useGeolocation = (
     }
   }
   const onEventError = (error: IGeolocationPositionError) =>
-    mounted && setState((oldState) => ({ ...oldState, loading: false, error }))
+    mounted &&
+    setState((oldState) => ({
+      ...oldState,
+      loading: false,
+      error,
+      denied: !!error.PERMISSION_DENIED,
+    }))
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(onEvent, onEventError, options)
