@@ -1,12 +1,10 @@
-import { useContext } from 'react'
-
-import { AddressContext } from '@app/store/AddressContext'
+import { useAddressContext } from '@app/store/AddressContext'
 import { Pharmacies } from '@app/components/Phamracies'
 import { AddressField, PageWrapper, Loader } from '@app/components'
 import { LanguageSelect } from '@app/components/LanguageSelect'
 
 export function MainPage() {
-  const { address, loading } = useContext(AddressContext)
+  const { address, loading } = useAddressContext()
 
   if (loading || !address) {
     return (

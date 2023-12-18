@@ -44,6 +44,7 @@ export default functions.region('europe-west1').https.onCall(async (data) => {
       city: cityObj?.short_name,
       district: districtObj?.short_name,
       location: data.results[0].geometry.location,
+      placeId: data.results[0].place_id,
     }
   } catch (e) {
     throw new functions.https.HttpsError('internal', 'Bad request')

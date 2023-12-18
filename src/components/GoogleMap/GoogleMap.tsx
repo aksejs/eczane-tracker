@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
 
 import { GOOGLE_API_KEY } from '@app/utils/contants'
@@ -10,6 +10,7 @@ import DistanceMatrixService from './DistanceMatrixService'
 import { Map } from '../Map'
 import { Loader } from '../Loader'
 import { CustomMarker } from '../CustomMarker'
+import { useMapContext } from '@app/store/MapContext'
 
 const render = (status: Status) => {
   if (status === Status.FAILURE) {
@@ -23,7 +24,6 @@ interface GoogleMapProps {
   onClick?: (e: google.maps.MapMouseEvent) => void
   onMarkerClick: (payload: Pharmacy) => void
   markers?: Pharmacy[]
-  highlightedPharmacy: Pharmacy | null
   latLng: google.maps.LatLngLiteral
 }
 
@@ -32,32 +32,26 @@ export default function GoogleMap({
   latLng,
   markers,
   onMarkerClick,
-  highlightedPharmacy,
 }: GoogleMapProps) {
-  const [center, setCenter] = useState<google.maps.LatLngLiteral>(latLng)
-  const [zoom, setZoom] = useState<number>(15)
+  const { selectedId, center, handleSetCenter, zoom, handleSetZoom } =
+    useMapContext()
   const filtered = useMemo(() => {
     return markers?.filter((m) => m.lat && m.lng)
   }, [markers])
 
-  const highlightedPharmacyLatLng = highlightedPharmacy && {
-    lat: +highlightedPharmacy.lat,
-    lng: +highlightedPharmacy.lng,
-  }
-
   const onIdle = (map: google.maps.Map) => {
-    setZoom(map.getZoom()!)
+    handleSetZoom(map.getZoom()!)
 
     const nextCenter = map.getCenter()
 
     if (nextCenter) {
-      setCenter(nextCenter.toJSON())
+      handleSetCenter(nextCenter.toJSON())
     }
   }
 
   useEffect(() => {
     if (isLatLngLiteral(latLng)) {
-      setCenter(latLng)
+      handleSetCenter(latLng)
     }
   }, [latLng])
 
@@ -85,7 +79,7 @@ export default function GoogleMap({
               key={pharmacy.address}
               pharmacy={pharmacy}
               onClick={onMarkerClick}
-              highlight={pharmacy.id === highlightedPharmacy?.id}
+              highlight={pharmacy.id == selectedId}
             />
           ))}
         </Map>

@@ -61,7 +61,7 @@ const setData = async (data: Array<Pharmacy>) => {
 }
 
 const parseData = async (dateString: string) => {
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch({ headless: false })
   const page = await browser.newPage()
 
   await page.setViewport({ width: 1080, height: 1024 })
@@ -123,7 +123,7 @@ const parseData = async (dateString: string) => {
 
 let arr: string[] = []
 
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 1; i++) {
   let day = new Date()
   day.setDate(day.getDate() + i)
   arr.push(day.toLocaleDateString())

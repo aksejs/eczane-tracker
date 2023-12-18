@@ -1,4 +1,4 @@
-import { Fragment, useContext, useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Combobox, Transition } from '@headlessui/react'
 import { HiMapPin, HiCheckCircle, HiXMark } from 'react-icons/hi2'
@@ -7,7 +7,7 @@ import _ from 'lodash'
 
 import { functions } from '@app/utils/firebase'
 import { Address, ApiGeocodeResponse, isLatLngLiteral } from '@app/utils/types'
-import { AddressContext } from '@app/store/AddressContext'
+import { AddressContext, useAddressContext } from '@app/store/AddressContext'
 
 export default function AddressField({
   defaultAddress,
@@ -30,7 +30,7 @@ export default function AddressField({
     ApiGeocodeResponse
   >(functions, 'geocodeAddressHttps')
 
-  const { setAddress } = useContext(AddressContext)
+  const { setAddress } = useAddressContext()
   const [selected, setSelected] = useState<Address | null>(
     defaultAddress || null
   )

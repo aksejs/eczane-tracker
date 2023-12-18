@@ -1,13 +1,12 @@
 import * as functions from 'firebase-functions'
 import { Client } from '@googlemaps/google-maps-services-js'
-const client = new Client({})
 
-import axios from 'axios'
+const googleAPI = new Client({})
 
 export default functions.region('europe-west1').https.onCall(async (data) => {
   const term = data.term
   try {
-    const res = await client.placeAutocomplete({
+    const res = await googleAPI.placeAutocomplete({
       params: {
         key: functions.config().google.secret,
         input: term,

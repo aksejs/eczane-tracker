@@ -8,22 +8,6 @@ import { BottomSheet } from '../BottomSheet'
 import { useQuery } from 'react-query'
 import { httpsCallableFromURL } from 'firebase/functions'
 
-function getStartOfToday(): Timestamp {
-  const now = new Date()
-  now.setHours(0, 0, 0, 0)
-
-  return Timestamp.fromDate(now)
-}
-
-function getStartTomorrow(): Timestamp {
-  const today = new Date()
-  const tomorrow = new Date(today)
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  tomorrow.setHours(0, 0, 0, 0)
-
-  return Timestamp.fromDate(tomorrow)
-}
-
 interface PharmaciesMapProps {
   address: Address
   distance?: string
@@ -46,7 +30,6 @@ const fetchPharmaciesByAdress = async (address: Address) => {
 
 export default function PharmaciesMap({ address }: PharmaciesMapProps) {
   const [pharmacies, setPharmacies] = useState<Pharmacy[]>([])
-  const memoizedPharmacies = useMemo(() => pharmacies, [pharmacies])
 
   useEffect(() => {
     fetchPharmaciesByAdress(address)
@@ -61,13 +44,10 @@ export default function PharmaciesMap({ address }: PharmaciesMapProps) {
     <>
       <GoogleMap
         latLng={address.location}
-        markers={memoizedPharmacies}
+        markers={pharmacies}
         onMarkerClick={() => {}}
-        highlightedPharmacy={null}
       />
-      {memoizedPharmacies.length && (
-        <BottomSheet pharmacies={memoizedPharmacies} />
-      )}
+      {pharmacies.length && <BottomSheet pharmacies={pharmacies} />}
     </>
   )
 }

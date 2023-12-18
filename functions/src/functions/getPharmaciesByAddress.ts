@@ -9,24 +9,44 @@ import {
   isCorrectAddress,
 } from '../utils/types'
 
-const client = new Client({})
+const googleAPI = new Client({})
 
-// Function to get pharmacies based on district
-async function getPharmacies(address: Address) {
-  const query = address.district
-    ? admin
-        .firestore()
-        .collection('pharmacies')
-        .where('district', '==', address.district)
-        .get()
-    : admin.firestore().collection('pharmacies').get()
-
-  return (await query).docs.map((doc) => doc.data()) as Pharmacy[]
+const pharmacyConverter = {
+  toFirestore(pharmacy: Pharmacy): admin.firestore.DocumentData {
+    return { ...pharmacy }
+  },
+  fromFirestore(snapshot: admin.firestore.QueryDocumentSnapshot): Pharmacy {
+    const data = snapshot.data()
+    return {
+      district: data.district,
+      address: data.address,
+      tel: data.tel,
+      lat: data.lat,
+      lng: data.lng,
+      name: data.name,
+      working_hours: data.working_hours,
+    }
+  },
 }
 
-// Function to calculate distances
+async function getPharmacies(address: Address): Promise<Pharmacy[]> {
+  const pharmaciesCollection = admin
+    .firestore()
+    .collection('pharmacies')
+    .withConverter(pharmacyConverter)
+
+  const query = address.district
+    ? pharmaciesCollection.where('district', '==', address.district).get()
+    : pharmaciesCollection.get()
+
+  return (await query).docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }))
+}
+
 async function calculateDistances(address: Address, pharmacies: Pharmacy[]) {
-  const distanceResponse = await client.distancematrix({
+  const distanceResponse = await googleAPI.distancematrix({
     params: {
       key: functions.config().google.secret,
       origins: [address.location],
@@ -45,7 +65,6 @@ async function calculateDistances(address: Address, pharmacies: Pharmacy[]) {
 
 export default functions.region('europe-west1').https.onRequest((req, res) => {
   cors(req, res, async () => {
-    console.log('Request body:', req.body)
     const address: Address = req.body
 
     if (!isCorrectAddress(address)) {

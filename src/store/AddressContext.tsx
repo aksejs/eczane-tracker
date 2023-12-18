@@ -1,4 +1,10 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { useQuery } from 'react-query'
 import { httpsCallable } from 'firebase/functions'
 import { functions } from '@app/utils/firebase'
@@ -24,22 +30,22 @@ export const AddressContext = createContext<AddressContextProps>({
   geolocationDenied: false,
 })
 
+const geocodeAddress = async (geolocation: GeoLocationSensorState) => {
+  const res = await httpsCallable<{ latlng: string }, ApiGeocodeResponse>(
+    functions,
+    'geocodeAddressHttps'
+  )({
+    latlng: `${geolocation.latitude},${geolocation.longitude}`,
+  })
+
+  return res
+}
+
 export const AddressContextProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
   const geolocation = useGeolocation()
   const [state, setState] = useState<Address>()
-
-  const geocodeAddress = async (geolocation: GeoLocationSensorState) => {
-    const res = await httpsCallable<{ latlng: string }, ApiGeocodeResponse>(
-      functions,
-      'geocodeAddressHttps'
-    )({
-      latlng: `${geolocation.latitude},${geolocation.longitude}`,
-    })
-
-    return res
-  }
 
   useEffect(() => {
     if (geolocation.latitude) {
@@ -79,3 +85,5 @@ export const AddressContextProvider: React.FC<{
     </AddressContext.Provider>
   )
 }
+
+export const useAddressContext = () => useContext(AddressContext)
