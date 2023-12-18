@@ -1,44 +1,31 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Timestamp, collection, query, where } from 'firebase/firestore'
-import { useFirestoreQueryData } from '@react-query-firebase/firestore'
-import { Address, Pharmacy } from '@app/utils/types'
-import { Card, GoogleMap, Loader } from '@app/components'
-import { db, functions } from '@app/utils/firebase'
-import { BottomSheet } from '../BottomSheet'
 import { useQuery } from 'react-query'
-import { httpsCallableFromURL } from 'firebase/functions'
+import { GoogleMap, Loader } from '@app/components'
+import { BottomSheet } from '../BottomSheet'
+import { Address } from '@app/utils/types'
+import { fetchPharmaciesByAddress } from '@app/utils/api'
 
-interface PharmaciesMapProps {
-  address: Address
-  distance?: string
-}
-
-const fetchPharmaciesByAdress = async (address: Address) => {
-  const res = await fetch(
-    'http://127.0.0.1:5001/eczane-tracker/europe-west1/getPharmaciesByAddress',
+export default function PharmaciesMap({ address }: { address: Address }) {
+  const {
+    data: pharmacies,
+    isLoading,
+    isError,
+  } = useQuery(
+    ['pharmacies', address.location.lat, address.location.lng],
+    () => fetchPharmaciesByAddress(address),
     {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(address),
+      enabled: !!address.location.lat && !!address.location.lng,
+      staleTime: 1000 * 60 * 60,
+      cacheTime: 1000 * 60 * 60,
     }
   )
 
-  return res
-}
+  if (isLoading) {
+    return <Loader />
+  }
 
-export default function PharmaciesMap({ address }: PharmaciesMapProps) {
-  const [pharmacies, setPharmacies] = useState<Pharmacy[]>([])
-
-  useEffect(() => {
-    fetchPharmaciesByAdress(address)
-      .then((res) => res.json())
-      .then((res) => {
-        const pharmacies: Pharmacy[] = res.results
-        setPharmacies(pharmacies)
-      })
-  }, [address.location.lat])
+  if (isError || !pharmacies) {
+    return <div>Error loading pharmacies.</div>
+  }
 
   return (
     <>
@@ -47,7 +34,7 @@ export default function PharmaciesMap({ address }: PharmaciesMapProps) {
         markers={pharmacies}
         onMarkerClick={() => {}}
       />
-      {pharmacies.length && <BottomSheet pharmacies={pharmacies} />}
+      {pharmacies.length > 0 && <BottomSheet pharmacies={pharmacies} />}
     </>
   )
 }

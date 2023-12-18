@@ -78,7 +78,7 @@ export default function BottomSheetComponent({
       <div className="flex flex-col divide-y">
         {sortedPharmacies.map((pharmacy) => (
           <Item
-            key={pharmacy.address}
+            key={pharmacy.id}
             pharmacy={pharmacy}
             distance={pharmacy.distance}
           />

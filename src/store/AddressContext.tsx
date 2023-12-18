@@ -1,19 +1,8 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-import { useQuery } from 'react-query'
-import { httpsCallable } from 'firebase/functions'
-import { functions } from '@app/utils/firebase'
-import { Address, ApiGeocodeResponse, isLatLngLiteral } from '@app/utils/types'
-import {
-  GeoLocationSensorState,
-  useGeolocation,
-} from '@app/hooks/useGeolocation'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { Address } from '@app/utils/types'
+import { useGeolocation } from '@app/hooks/useGeolocation'
 import { INITIAL_ADDRESS } from '@app/utils/contants'
+import { geocodeAddress } from '@app/utils/api'
 
 interface AddressContextProps {
   address?: Address
@@ -30,17 +19,6 @@ export const AddressContext = createContext<AddressContextProps>({
   geolocationDenied: false,
 })
 
-const geocodeAddress = async (geolocation: GeoLocationSensorState) => {
-  const res = await httpsCallable<{ latlng: string }, ApiGeocodeResponse>(
-    functions,
-    'geocodeAddressHttps'
-  )({
-    latlng: `${geolocation.latitude},${geolocation.longitude}`,
-  })
-
-  return res
-}
-
 export const AddressContextProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
@@ -49,13 +27,15 @@ export const AddressContextProvider: React.FC<{
 
   useEffect(() => {
     if (geolocation.latitude) {
-      geocodeAddress(geolocation).then((res) => {
+      geocodeAddress({
+        latlng: `${geolocation.latitude},${geolocation.longitude}`,
+      }).then((data) => {
         setState({
-          fullAddress: res.data.fullAddress,
-          city: res.data.city,
-          district: res.data.district,
-          placeId: res.data.placeId,
-          location: res.data.location,
+          fullAddress: data.fullAddress,
+          city: data.city,
+          district: data.district,
+          placeId: data.placeId,
+          location: data.location,
         })
       })
     }
