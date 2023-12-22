@@ -1,3 +1,3 @@
-export const UnsupportedPage = () => {
-  return <div>404</div>
+export function UnsupportedPage() {
+  return <div>404</div>;
 }

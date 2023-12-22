@@ -1,16 +1,17 @@
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-import { MainPage } from './pages/MainPage'
-import { AddressContextProvider } from './store/AddressContext'
-import { LanguageContextProvider } from './store/LanguageContext'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { MapContextProvider } from './store/MapContext'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import './globals.css'
-import 'react-spring-bottom-sheet/dist/style.css'
+import { MainPage } from './pages/MainPage';
+import { AddressContextProvider } from './store/AddressContext';
+import { LanguageContextProvider } from './store/LanguageContext';
+import { MapContextProvider } from './store/MapContext';
 
-const queryClient = new QueryClient()
+import './globals.css';
+import 'react-spring-bottom-sheet/dist/style.css';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
         </MapContextProvider>
       </AddressContextProvider>
     </QueryClientProvider>
-  )
+  );
 }
 
-export default App
+export default App;

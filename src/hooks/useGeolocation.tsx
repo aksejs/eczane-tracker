@@ -1,26 +1,25 @@
-import { Timestamp } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 export interface IGeolocationPositionError {
-  readonly code: number
-  readonly message: string
-  readonly PERMISSION_DENIED: number
-  readonly POSITION_UNAVAILABLE: number
-  readonly TIMEOUT: number
+  readonly code: number;
+  readonly message: string;
+  readonly PERMISSION_DENIED: number;
+  readonly POSITION_UNAVAILABLE: number;
+  readonly TIMEOUT: number;
 }
 
 export interface GeoLocationSensorState {
-  loading: boolean
-  accuracy: number | null
-  altitude: number | null
-  altitudeAccuracy: number | null
-  heading: number | null
-  latitude: number | null
-  longitude: number | null
-  speed: number | null
-  timestamp: number | null
-  error?: Error | IGeolocationPositionError | null
-  denied?: boolean
+  loading: boolean;
+  accuracy: number | null;
+  altitude: number | null;
+  altitudeAccuracy: number | null;
+  heading: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  speed: number | null;
+  timestamp: number | null;
+  error?: Error | IGeolocationPositionError | null;
+  denied?: boolean;
 }
 
 export const useGeolocation = (
@@ -38,8 +37,8 @@ export const useGeolocation = (
     timestamp: Date.now(),
     error: null,
     denied: false,
-  })
-  let mounted = true
+  });
+  let mounted = true;
 
   const onEvent = (event: GeolocationPosition) => {
     if (mounted) {
@@ -53,9 +52,9 @@ export const useGeolocation = (
         longitude: event.coords.longitude,
         speed: event.coords.speed,
         timestamp: event.timestamp,
-      })
+      });
     }
-  }
+  };
   const onEventError = (error: IGeolocationPositionError) =>
     mounted &&
     setState((oldState) => ({
@@ -63,15 +62,15 @@ export const useGeolocation = (
       loading: false,
       error,
       denied: !!error.PERMISSION_DENIED,
-    }))
+    }));
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(onEvent, onEventError, options)
+    navigator.geolocation.getCurrentPosition(onEvent, onEventError, options);
 
     return () => {
-      mounted = false
-    }
-  }, [])
+      mounted = false;
+    };
+  }, []);
 
-  return state
-}
+  return state;
+};

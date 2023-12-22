@@ -16,14 +16,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@app/*": [
-        "./src/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ]
+      "@app/*": ["./src/*"],
+      "@components/*": ["./src/components/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", ".eslintrc.cjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

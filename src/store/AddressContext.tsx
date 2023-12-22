@@ -1,29 +1,30 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { Address } from '@app/utils/types'
-import { useGeolocation } from '@app/hooks/useGeolocation'
-import { INITIAL_ADDRESS } from '@app/utils/contants'
-import { geocodeAddress } from '@app/utils/api'
+import React, { createContext, useContext, useEffect, useState } from 'react';
+
+import { Address } from '@app/utils/types';
+import { useGeolocation } from '@app/hooks/useGeolocation';
+import { INITIAL_ADDRESS } from '@app/utils/contants';
+import { geocodeAddress } from '@app/utils/api';
 
 type AddressContextProps = {
-  address?: Address
-  loading: boolean
-  error: boolean
-  geolocationDenied: boolean
-  setAddress: (address: Address) => void
-}
+  address?: Address;
+  loading: boolean;
+  error: boolean;
+  geolocationDenied: boolean;
+  setAddress: (address: Address) => void;
+};
 
 export const AddressContext = createContext<AddressContextProps>({
   setAddress: () => {},
   loading: true,
   error: false,
   geolocationDenied: false,
-})
+});
 
 export const AddressContextProvider: React.FC<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }> = ({ children }) => {
-  const geolocation = useGeolocation()
-  const [state, setState] = useState<Address>()
+  const geolocation = useGeolocation();
+  const [state, setState] = useState<Address>();
 
   useEffect(() => {
     if (geolocation.latitude) {
@@ -36,20 +37,20 @@ export const AddressContextProvider: React.FC<{
           district: data.district,
           placeId: data.placeId,
           location: data.location,
-        })
-      })
+        });
+      });
     }
-  }, [geolocation.latitude])
+  }, [geolocation.latitude]);
 
   useEffect(() => {
     if (geolocation.denied) {
-      setState(INITIAL_ADDRESS)
+      setState(INITIAL_ADDRESS);
     }
-  }, [geolocation.denied])
+  }, [geolocation.denied]);
 
   const handleSetAddress = (address: Address) => {
-    setState(address)
-  }
+    setState(address);
+  };
 
   const addressContextValue: AddressContextProps = {
     address: state,
@@ -57,13 +58,13 @@ export const AddressContextProvider: React.FC<{
     error: false,
     geolocationDenied: Boolean(geolocation.error),
     setAddress: handleSetAddress,
-  }
+  };
 
   return (
     <AddressContext.Provider value={addressContextValue}>
       {children}
     </AddressContext.Provider>
-  )
-}
+  );
+};
 
-export const useAddressContext = () => useContext(AddressContext)
+export const useAddressContext = () => useContext(AddressContext);

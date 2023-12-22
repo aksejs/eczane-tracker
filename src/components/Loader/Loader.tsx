@@ -22,5 +22,5 @@ export default function Loader() {
       </svg>
       <span className="sr-only">Loading...</span>
     </div>
-  )
+  );
 }

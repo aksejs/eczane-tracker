@@ -5,17 +5,20 @@ import {
   useEffect,
   useRef,
   useState,
-} from 'react'
-import type { ReactNode } from 'react'
-import { isLatLngLiteral } from '@app/utils/types'
-import mapStyle from './mapStyle'
-import { useDeepCompareEffectForMaps } from '../../hooks/useDeepCompare'
+} from 'react';
+import type { ReactNode } from 'react';
+
+import { useDeepCompareEffectForMaps } from '../../hooks/useDeepCompare';
+
+import mapStyle from './mapStyle';
+
+import { isLatLngLiteral } from '@app/utils/types';
 
 interface MapProps extends google.maps.MapOptions {
-  className: string
-  onClick?: (e: google.maps.MapMouseEvent) => void
-  onIdle?: (map: google.maps.Map) => void
-  children?: ReactNode
+  className: string;
+  onClick?: (e: google.maps.MapMouseEvent) => void;
+  onIdle?: (map: google.maps.Map) => void;
+  children?: ReactNode;
 }
 
 export default function Map({
@@ -25,43 +28,43 @@ export default function Map({
   children,
   ...options
 }: MapProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [map, setMap] = useState<google.maps.Map>()
+  const ref = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<google.maps.Map>();
 
   useEffect(() => {
     if (ref.current && map === undefined) {
       const googleMap = new window.google.maps.Map(ref.current, {
         styles: mapStyle,
-      })
-      setMap(googleMap)
+      });
+      setMap(googleMap);
     }
-  }, [ref, map])
+  }, [ref, map]);
 
   useDeepCompareEffectForMaps(() => {
     if (map) {
-      const { center, ...rest } = options
-      map.setOptions(rest)
+      const { center, ...rest } = options;
+      map.setOptions(rest);
       if (isLatLngLiteral(center)) {
-        map.panTo(center)
+        map.panTo(center);
       }
     }
-  }, [map, options])
+  }, [map, options]);
 
   useEffect(() => {
     if (map) {
-      ;['click', 'idle'].forEach((eventName) =>
+      ['click', 'idle'].forEach((eventName) =>
         google.maps.event.clearListeners(map, eventName)
-      )
+      );
 
       if (onClick) {
-        map.addListener('click', onClick)
+        map.addListener('click', onClick);
       }
 
       if (onIdle) {
-        map.addListener('idle', () => onIdle(map))
+        map.addListener('idle', () => onIdle(map));
       }
     }
-  }, [map, onClick, onIdle])
+  }, [map, onClick, onIdle]);
 
   return (
     <>
@@ -69,10 +72,10 @@ export default function Map({
 
       {Children.map(children, (child) => {
         if (isValidElement(child)) {
-          // @ts-ignore
-          return cloneElement(child, { map })
+          // @ts-expect-error Specific of using the library.
+          return cloneElement(child, { map });
         }
       })}
     </>
-  )
+  );
 }

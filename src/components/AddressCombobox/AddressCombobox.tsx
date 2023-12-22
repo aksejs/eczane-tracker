@@ -1,21 +1,20 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Combobox } from '@headlessui/react'
-import _ from 'lodash'
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Combobox } from '@headlessui/react';
 
-import { Address, Prediction } from '@app/utils/types'
+import { Input } from './AddressCombobox.Input';
+import { Options } from './AddressCombobox.Options';
 
-import { Input } from './AddressCombobox.Input'
-import { Options } from './AddressCombobox.Options'
+import { Address, Prediction } from '@app/utils/types';
 
 const AddressCombobox: React.FC<{
-  onTermChange: (term: string) => void
-  onSearch: (term: string) => void
-  selected: Address | null
-  onSelect: (address: Address) => void
-  inputRef?: React.Ref<HTMLInputElement>
-  term: string
-  predictions?: Prediction[]
+  onTermChange: (term: string) => void;
+  onSearch: (term: string) => void;
+  selected: Address | null;
+  onSelect: (address: Address) => void;
+  inputRef?: React.Ref<HTMLInputElement>;
+  term: string;
+  predictions?: Prediction[];
 }> = ({
   onTermChange,
   onSelect,
@@ -25,7 +24,7 @@ const AddressCombobox: React.FC<{
   predictions,
   inputRef,
 }) => {
-  const [isBig, setIsBig] = useState(false)
+  const [isBig, setIsBig] = useState(false);
 
   return (
     <div className="flex absolute z-20 max-w-full">
@@ -39,8 +38,8 @@ const AddressCombobox: React.FC<{
           >
             <Input
               onChange={(e) => {
-                onTermChange(e.target.value)
-                onSearch(e.target.value)
+                onTermChange(e.target.value);
+                onSearch(e.target.value);
               }}
               onBlur={() => setIsBig(false)}
               onFocus={() => setIsBig(true)}
@@ -55,7 +54,7 @@ const AddressCombobox: React.FC<{
         )}
       </Combobox>
     </div>
-  )
-}
+  );
+};
 
-export default AddressCombobox
+export default AddressCombobox;

@@ -1,14 +1,15 @@
-import { useCallback, useMemo } from 'react'
-import { motion } from 'framer-motion'
+import { useCallback, useMemo } from 'react';
+import { motion } from 'framer-motion';
 
-import { Pharmacy } from '@app/utils/types'
-import OverlayView from '../OverlayView'
+import OverlayView from '../OverlayView';
+
+import { Pharmacy } from '@app/utils/types';
 
 interface CustomMarkerProps {
-  pharmacy: Pharmacy
-  map?: google.maps.Map
-  onClick: (payload: Pharmacy) => void
-  highlight?: boolean
+  pharmacy: Pharmacy;
+  map?: google.maps.Map;
+  onClick: (payload: Pharmacy) => void;
+  highlight?: boolean;
 }
 
 export default function CustomMarker({
@@ -18,8 +19,8 @@ export default function CustomMarker({
   highlight,
 }: CustomMarkerProps) {
   const handleClick = useCallback(() => {
-    onClick(pharmacy)
-  }, [onClick, pharmacy])
+    onClick(pharmacy);
+  }, [onClick, pharmacy]);
 
   const highLightedStyles = useMemo(
     () =>
@@ -27,7 +28,7 @@ export default function CustomMarker({
         ? 'text-black bg-zinc-50 font-bold py-2 px-2.5'
         : 'bg-zinc-600 py-1.5 px-2 text-white',
     [highlight]
-  )
+  );
 
   return (
     <>
@@ -58,5 +59,5 @@ export default function CustomMarker({
         </OverlayView>
       )}
     </>
-  )
+  );
 }

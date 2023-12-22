@@ -1,12 +1,12 @@
-import { Fragment } from 'react'
-import { Listbox, Transition } from '@headlessui/react'
-import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2'
+import { Fragment } from 'react';
+import { Listbox, Transition } from '@headlessui/react';
+import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2';
 
-import { LanguageKind } from '@app/utils/types'
-import { useLanguageContext } from '@app/store/LanguageContext'
+import { LanguageKind } from '@app/utils/types';
+import { useLanguageContext } from '@app/store/LanguageContext';
 
 export default function LanguageSelect() {
-  const { currentLang, setCurrentLang } = useLanguageContext()
+  const { currentLang, setCurrentLang } = useLanguageContext();
 
   return (
     <div className="right-0 w-[19vw] absolute my-2 mx-4 z-10 lg:w-[5rem]">
@@ -28,9 +28,9 @@ export default function LanguageSelect() {
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              {Object.values(LanguageKind).map((language, index) => (
+              {Object.values(LanguageKind).map((language) => (
                 <Listbox.Option
-                  key={index}
+                  key={language}
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 ${
                       active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
@@ -64,5 +64,5 @@ export default function LanguageSelect() {
         </div>
       </Listbox>
     </div>
-  )
+  );
 }

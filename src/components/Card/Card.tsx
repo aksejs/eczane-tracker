@@ -1,30 +1,29 @@
-import React, { useContext } from 'react'
-import { motion } from 'framer-motion'
-import { ImStarFull, ImStarHalf } from 'react-icons/im'
+import React, { useContext } from 'react';
+import { motion } from 'framer-motion';
+import { ImStarFull, ImStarHalf } from 'react-icons/im';
 
-import { LanguageContext } from '@app/store/LanguageContext'
-import { DISTANCE_DISCTIONARY } from '@app/utils/dictionary'
-
-import defaultImage from '@app/assets/eczane-default.jpg'
+import { LanguageContext } from '@app/store/LanguageContext';
+import { DISTANCE_DISCTIONARY } from '@app/utils/dictionary';
+import defaultImage from '@app/assets/eczane-default.jpg';
 
 type CardProps = {
-  name: string
-  address: string
-  stars: number
-  url?: string
-  distance?: string
-  onClick: () => void
-}
+  name: string;
+  address: string;
+  stars: number;
+  url?: string;
+  distance?: string;
+  onClick: () => void;
+};
 
-export const Card: React.FC<CardProps> = ({
+export function Card({
   name,
   address,
   stars,
   url,
   distance,
   onClick,
-}) => {
-  const { currentLang } = useContext(LanguageContext)
+}: CardProps) {
+  const { currentLang } = useContext(LanguageContext);
   return (
     <motion.div
       className="absolute bottom-6 left-0 right-0 mx-auto my-0 w-80"
@@ -75,5 +74,5 @@ export const Card: React.FC<CardProps> = ({
         </div>
       </div>
     </motion.div>
-  )
+  );
 }

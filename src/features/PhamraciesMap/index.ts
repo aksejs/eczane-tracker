@@ -1,1 +1,1 @@
-export { default as PharmaciesMap } from './PharmaciesMap'
+export { default as PharmaciesMap } from './PharmaciesMap';

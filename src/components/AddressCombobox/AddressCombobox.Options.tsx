@@ -1,14 +1,18 @@
-import React, { Fragment } from 'react'
-import { Combobox, Transition } from '@headlessui/react'
-import { HiCheckCircle } from 'react-icons/hi2'
+import React, { Fragment } from 'react';
+import { Combobox, Transition } from '@headlessui/react';
+import { HiCheckCircle } from 'react-icons/hi2';
 
-import type { Prediction } from '@app/utils/types'
+import type { Prediction } from '@app/utils/types';
 
-export const Options: React.FC<{
-  afterLeave: () => void
-  predictions?: Prediction[]
-  query: string
-}> = ({ afterLeave, predictions, query }) => {
+export function Options({
+  afterLeave,
+  predictions,
+  query,
+}: {
+  afterLeave: () => void;
+  predictions?: Prediction[];
+  query: string;
+}) {
   return (
     <Transition
       as={Fragment}
@@ -58,5 +62,5 @@ export const Options: React.FC<{
         )}
       </Combobox.Options>
     </Transition>
-  )
+  );
 }

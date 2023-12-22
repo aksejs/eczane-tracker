@@ -1,1 +1,1 @@
-export { default as AddressCombobox } from './AddressCombobox'
+export { default as AddressCombobox } from './AddressCombobox';

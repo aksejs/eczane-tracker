@@ -1,1 +1,1 @@
-export { SearchAddress } from './SearchAddress'
+export { SearchAddress } from './SearchAddress';

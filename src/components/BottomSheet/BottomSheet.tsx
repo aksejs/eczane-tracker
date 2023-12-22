@@ -1,28 +1,26 @@
-import { useMapContext } from '@app/store/MapContext'
-import { Pharmacy } from '@app/utils/types'
-import { useFirestoreQueryData } from '@react-query-firebase/firestore'
-import React, { useRef, useState, FunctionComponent, useMemo } from 'react'
-import { HiMapPin } from 'react-icons/hi2'
-import { BottomSheet, BottomSheetRef } from 'react-spring-bottom-sheet'
-import { Item } from './BottomSheet.Input'
+import { useState, useMemo } from 'react';
+import { BottomSheet } from 'react-spring-bottom-sheet';
+
+import { Item } from './BottomSheet.Input';
+
+import { Pharmacy } from '@app/utils/types';
 
 export default function BottomSheetComponent({
   pharmacies,
 }: {
-  pharmacies: Pharmacy[]
+  pharmacies: Pharmacy[];
 }) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(true);
   const sortedPharmacies = useMemo(() => {
     return pharmacies.sort((a, b) => {
-      const compA = a.distance ? a.distance : -1
-      const compB = b.distance ? b.distance : -1
+      const compA = a.distance ? a.distance : -1;
+      const compB = b.distance ? b.distance : -1;
 
-      return compA - compB
-    })
-  }, [pharmacies])
+      return compA - compB;
+    });
+  }, [pharmacies]);
 
   return (
-    //@ts-ignore
     <BottomSheet
       open={isOpen}
       onDismiss={() => setIsOpen(false)}
@@ -44,5 +42,5 @@ export default function BottomSheetComponent({
         ))}
       </div>
     </BottomSheet>
-  )
+  );
 }
