@@ -1,4 +1,3 @@
-import React, { FunctionComponent } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -9,6 +8,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { MapContextProvider } from './store/MapContext'
 
 import './globals.css'
+import 'react-spring-bottom-sheet/dist/style.css'
 
 const queryClient = new QueryClient()
 

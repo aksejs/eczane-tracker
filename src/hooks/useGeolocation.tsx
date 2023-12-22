@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 
 export interface IGeolocationPositionError {
@@ -40,7 +41,7 @@ export const useGeolocation = (
   })
   let mounted = true
 
-  const onEvent = (event: any) => {
+  const onEvent = (event: GeolocationPosition) => {
     if (mounted) {
       setState({
         loading: false,

@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import React, { useContext } from 'react'
 import { motion } from 'framer-motion'
 import { ImStarFull, ImStarHalf } from 'react-icons/im'
 
@@ -7,7 +7,7 @@ import { DISTANCE_DISCTIONARY } from '@app/utils/dictionary'
 
 import defaultImage from '@app/assets/eczane-default.jpg'
 
-interface CardProps {
+type CardProps = {
   name: string
   address: string
   stars: number
@@ -16,14 +16,14 @@ interface CardProps {
   onClick: () => void
 }
 
-export default function Card({
+export const Card: React.FC<CardProps> = ({
   name,
   address,
   stars,
   url,
   distance,
   onClick,
-}: CardProps) {
+}) => {
   const { currentLang } = useContext(LanguageContext)
   return (
     <motion.div

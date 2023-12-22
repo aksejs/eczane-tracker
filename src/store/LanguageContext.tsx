@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 
 import { LanguageKind } from '@app/utils/types'
 
@@ -26,3 +26,5 @@ export const LanguageContextProvider: React.FC<{
     </LanguageContext.Provider>
   )
 }
+
+export const useLanguageContext = () => useContext(LanguageContext)

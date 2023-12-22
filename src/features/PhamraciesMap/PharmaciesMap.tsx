@@ -1,10 +1,10 @@
 import { useQuery } from 'react-query'
 import { GoogleMap, Loader } from '@app/components'
-import { BottomSheet } from '../BottomSheet'
+import { BottomSheet } from '../../components/BottomSheet'
 import { Address } from '@app/utils/types'
 import { fetchPharmaciesByAddress } from '@app/utils/api'
 
-export default function PharmaciesMap({ address }: { address: Address }) {
+const PharmaciesMap: React.FC<{ address: Address }> = ({ address }) => {
   const {
     data: pharmacies,
     isLoading,
@@ -23,8 +23,12 @@ export default function PharmaciesMap({ address }: { address: Address }) {
     return <Loader />
   }
 
-  if (isError || !pharmacies) {
-    return <div>Error loading pharmacies.</div>
+  if (isError || !pharmacies?.length) {
+    return (
+      <div className="flex items-center justify-center">
+        Error loading pharmacies.
+      </div>
+    )
   }
 
   return (
@@ -34,7 +38,9 @@ export default function PharmaciesMap({ address }: { address: Address }) {
         markers={pharmacies}
         onMarkerClick={() => {}}
       />
-      {pharmacies.length > 0 && <BottomSheet pharmacies={pharmacies} />}
+      <BottomSheet pharmacies={pharmacies} />
     </>
   )
 }
+
+export default PharmaciesMap

@@ -1,9 +1,11 @@
+import React from 'react'
 import { useAddressContext } from '@app/store/AddressContext'
-import { Pharmacies } from '@app/components/Phamracies'
-import { AddressField, PageWrapper, Loader } from '@app/components'
-import { LanguageSelect } from '@app/components/LanguageSelect'
+import { PageWrapper, Loader } from '@app/components'
+import { PharmaciesMap } from '@app/features/PhamraciesMap'
+import { LanguageSelect } from '@app/features/LanguageSelect'
+import { SearchAddress } from '@app/features/SearchAddress'
 
-export function MainPage() {
+export const MainPage: React.FC = () => {
   const { address, loading } = useAddressContext()
 
   if (loading || !address) {
@@ -17,10 +19,14 @@ export function MainPage() {
   return (
     <PageWrapper>
       <div className="h-[6%] min-h-[52px] flex items-center">
-        <AddressField defaultAddress={address} />
+        <SearchAddress defaultAddress={address} />
         <LanguageSelect />
       </div>
-      {address.location && <Pharmacies address={address} />}
+      {address.location ? (
+        <PharmaciesMap address={address} />
+      ) : (
+        <div>No location</div>
+      )}
     </PageWrapper>
   )
 }

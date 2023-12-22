@@ -4,7 +4,7 @@ import { useGeolocation } from '@app/hooks/useGeolocation'
 import { INITIAL_ADDRESS } from '@app/utils/contants'
 import { geocodeAddress } from '@app/utils/api'
 
-interface AddressContextProps {
+type AddressContextProps = {
   address?: Address
   loading: boolean
   error: boolean

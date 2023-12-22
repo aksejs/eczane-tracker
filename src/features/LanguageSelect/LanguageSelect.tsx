@@ -1,12 +1,12 @@
-import { Fragment, useContext } from 'react'
+import { Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2'
 
 import { LanguageKind } from '@app/utils/types'
-import { LanguageContext } from '@app/store/LanguageContext'
+import { useLanguageContext } from '@app/store/LanguageContext'
 
 export default function LanguageSelect() {
-  const { currentLang, setCurrentLang } = useContext(LanguageContext)
+  const { currentLang, setCurrentLang } = useLanguageContext()
 
   return (
     <div className="right-0 w-[19vw] absolute my-2 mx-4 z-10 lg:w-[5rem]">
