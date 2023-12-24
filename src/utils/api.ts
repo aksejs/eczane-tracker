@@ -1,13 +1,11 @@
 import { httpsCallable } from 'firebase/functions';
-import { functions } from './firebase';
+import { API_URL, functions } from './firebase';
 import { Address, ApiGeocodeResponse, Pharmacy } from './types';
-
-const API_URL = 'http://127.0.0.1:5001/eczane-tracker/europe-west1/getPharmaciesByAddress';
 
 export const fetchPharmaciesByAddress = async (
   address: Address,
 ): Promise<Pharmacy[]> => {
-  const response = await fetch(API_URL, {
+  const response = await fetch(`${API_URL}/getPharmaciesByAddress`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

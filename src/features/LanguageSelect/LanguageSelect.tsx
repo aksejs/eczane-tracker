@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2';
-import { LANGUAGES } from '@app/utils/types';
 import { useLanguageContext } from '@app/store/LanguageContext';
+import { LANGUAGES } from '@app/utils/contants';
 
 export default function LanguageSelect() {
   const { currentLang, setCurrentLang } = useLanguageContext();

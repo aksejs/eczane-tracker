@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import { GoogleMap, Loader } from '@app/components';
 import { Address } from '@app/utils/types';
 import { fetchPharmaciesByAddress } from '@app/utils/api';
+import { Error } from '@app/components/Error';
 import { BottomSheet } from '../../components/BottomSheet';
 
 const PharmaciesMap: React.FC<{ address: Address }> = ({ address }) => {
@@ -25,9 +26,7 @@ const PharmaciesMap: React.FC<{ address: Address }> = ({ address }) => {
 
   if (isError || !pharmacies?.length) {
     return (
-      <div className="flex items-center justify-center">
-        Error loading pharmacies.
-      </div>
+      <Error />
     );
   }
 

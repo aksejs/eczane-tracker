@@ -6,10 +6,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { ReactNode } from 'react';
 import { isLatLngLiteral } from '@app/utils/types';
 import { useDeepCompareEffectForMaps } from '../../hooks/useDeepCompare';
 import mapStyle from './mapStyle';
+import type { ReactNode } from 'react';
 
 interface MapProps extends google.maps.MapOptions {
   className: string;

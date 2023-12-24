@@ -1,7 +1,7 @@
 import { createCustomEqual, deepEqual } from 'fast-equals';
 import { useEffect, useRef } from 'react';
-import type { EffectCallback } from 'react';
 import { isLatLngLiteral } from '@app/utils/types';
+import type { EffectCallback } from 'react';
 
 const deepCompareEqualsForMaps = createCustomEqual(() => ({
   areObjectsEqual(a, b) {

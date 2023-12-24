@@ -1,9 +1,7 @@
 import React from 'react';
 import { useAddressContext } from '@app/store/AddressContext';
 import { PageWrapper, Loader } from '@app/components';
-import { PharmaciesMap } from '@app/features/PhamraciesMap';
-import { LanguageSelect } from '@app/features/LanguageSelect';
-import { SearchAddress } from '@app/features/SearchAddress';
+import { LanguageSelect, PharmaciesMap, SearchAddress } from '@app/features';
 
 export const MainPage: React.FC = () => {
   const { address, loading } = useAddressContext();

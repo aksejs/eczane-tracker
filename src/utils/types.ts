@@ -1,4 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
+import { LANGUAGES } from './contants';
 
 export interface Address {
   fullAddress: string;
@@ -31,13 +32,6 @@ export const isLatLngOrLatLngLiteral = (
   obj: any
 ): obj is google.maps.LatLng | google.maps.LatLngLiteral =>
   obj instanceof google.maps.LatLng || isLatLngLiteral(obj);
-
-export const LANGUAGES = {
-  en: 'EN',
-  tr: 'TR',
-  ru: 'RU',
-  ua: 'UA',
-} as const;
 
 export type LanguageType = (typeof LANGUAGES)[keyof typeof LANGUAGES]
 
