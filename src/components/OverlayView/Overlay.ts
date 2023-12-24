@@ -1,7 +1,7 @@
 export function createOverlay(
   container: HTMLElement,
   pane: keyof google.maps.MapPanes,
-  position: google.maps.LatLng | google.maps.LatLngLiteral
+  position: google.maps.LatLng | google.maps.LatLngLiteral,
 ) {
   class Overlay extends google.maps.OverlayView {
     container: HTMLElement;
@@ -13,7 +13,7 @@ export function createOverlay(
     constructor(
       container: HTMLElement,
       pane: keyof google.maps.MapPanes,
-      position: google.maps.LatLng | google.maps.LatLngLiteral
+      position: google.maps.LatLng | google.maps.LatLngLiteral,
     ) {
       super();
       this.container = container;

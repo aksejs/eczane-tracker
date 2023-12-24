@@ -23,7 +23,7 @@ export interface GeoLocationSensorState {
 }
 
 export const useGeolocation = (
-  options?: PositionOptions
+  options?: PositionOptions,
 ): GeoLocationSensorState => {
   const [state, setState] = useState<GeoLocationSensorState>({
     loading: true,
@@ -55,9 +55,8 @@ export const useGeolocation = (
       });
     }
   };
-  const onEventError = (error: IGeolocationPositionError) =>
-    mounted &&
-    setState((oldState) => ({
+  const onEventError = (error: IGeolocationPositionError) => mounted
+    && setState((oldState) => ({
       ...oldState,
       loading: false,
       error,

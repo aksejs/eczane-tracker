@@ -1,4 +1,3 @@
-export { Button } from './Button';
 export { Map } from './Map';
 export { PageWrapper } from './PageWrapper';
 export { Card } from './Card';

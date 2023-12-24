@@ -1,10 +1,8 @@
 import { httpsCallable } from 'firebase/functions';
-
 import { functions } from './firebase';
 import { Address, ApiGeocodeResponse, Pharmacy } from './types';
 
-const API_URL =
-  'http://127.0.0.1:5001/eczane-tracker/europe-west1/getPharmaciesByAddress';
+const API_URL = 'http://127.0.0.1:5001/eczane-tracker/europe-west1/getPharmaciesByAddress';
 
 export const fetchPharmaciesByAddress = async (
   address: Address,

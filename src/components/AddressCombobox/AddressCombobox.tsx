@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Combobox } from '@headlessui/react';
-
+import { Address, Prediction } from '@app/utils/types';
 import { Input } from './AddressCombobox.Input';
 import { Options } from './AddressCombobox.Options';
-
-import { Address, Prediction } from '@app/utils/types';
 
 const AddressCombobox: React.FC<{
   onTermChange: (term: string) => void;

@@ -21,10 +21,10 @@ export interface Pharmacy {
 
 // eslint-disable-next-line
 export const isLatLngLiteral = (obj: any): obj is google.maps.LatLngLiteral =>
-  obj != null &&
-  typeof obj === 'object' &&
-  Number.isFinite(obj.lat) &&
-  Number.isFinite(obj.lng);
+  obj != null
+  && typeof obj === 'object'
+  && Number.isFinite(obj.lat)
+  && Number.isFinite(obj.lng);
 
 export const isLatLngOrLatLngLiteral = (
   // eslint-disable-next-line
@@ -32,12 +32,14 @@ export const isLatLngOrLatLngLiteral = (
 ): obj is google.maps.LatLng | google.maps.LatLngLiteral =>
   obj instanceof google.maps.LatLng || isLatLngLiteral(obj);
 
-export enum LanguageKind {
-  EN = 'EN',
-  TR = 'TR',
-  RU = 'RU',
-  UA = 'UA',
-}
+export const LANGUAGES = {
+  en: 'EN',
+  tr: 'TR',
+  ru: 'RU',
+  ua: 'UA',
+} as const;
+
+export type LanguageType = (typeof LANGUAGES)[keyof typeof LANGUAGES]
 
 export type ApiGeocodeResponse = {
   fullAddress: string;

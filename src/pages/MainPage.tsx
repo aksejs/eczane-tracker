@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { useAddressContext } from '@app/store/AddressContext';
 import { PageWrapper, Loader } from '@app/components';
 import { PharmaciesMap } from '@app/features/PhamraciesMap';

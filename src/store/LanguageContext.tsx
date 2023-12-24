@@ -1,19 +1,18 @@
 import { createContext, useContext, useState } from 'react';
-
-import { LanguageKind } from '@app/utils/types';
+import { LANGUAGES, LanguageType } from '@app/utils/types';
 
 export const LanguageContext = createContext<{
-  currentLang: LanguageKind;
-  setCurrentLang: (lang: LanguageKind) => void;
-}>({
-  currentLang: LanguageKind.EN,
-  setCurrentLang: () => {},
-});
+  currentLang: LanguageType;
+  setCurrentLang:(lang: LanguageType) => void;
+    }>({
+      currentLang: LANGUAGES.en,
+      setCurrentLang: () => {},
+    });
 
 export const LanguageContextProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [language, setLanguage] = useState<LanguageKind>(LanguageKind.EN);
+  const [language, setLanguage] = useState<LanguageType>(LANGUAGES.en);
 
   return (
     <LanguageContext.Provider

@@ -1,9 +1,6 @@
 import _ from 'lodash';
-
 import React, { useCallback, useRef, useState } from 'react';
-
 import { useMutation, useQuery } from 'react-query';
-
 import { AddressCombobox } from '@app/components';
 import { useAddressContext } from '@app/store/AddressContext';
 import { geocodeAddress, searchAddress } from '@app/utils/api';
@@ -15,7 +12,7 @@ export const SearchAddress: React.FC<{ defaultAddress: Address }> = ({
   const { setAddress } = useAddressContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const [selected, setSelected] = useState<Address | null>(
-    defaultAddress || null
+    defaultAddress || null,
   );
   const [query, setQuery] = useState('');
 
@@ -28,7 +25,7 @@ export const SearchAddress: React.FC<{ defaultAddress: Address }> = ({
 
   const debouncedSearch = useCallback(
     _.debounce(() => refetchPredictions(), 1000),
-    [refetchPredictions]
+    [refetchPredictions],
   );
 
   const getLatLngMutation = useMutation(
@@ -47,7 +44,7 @@ export const SearchAddress: React.FC<{ defaultAddress: Address }> = ({
           inputRef.current?.blur();
         }
       },
-    }
+    },
   );
 
   const handleSelect = (selectedValue: Address | null) => {

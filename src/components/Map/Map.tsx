@@ -7,12 +7,9 @@ import {
   useState,
 } from 'react';
 import type { ReactNode } from 'react';
-
-import { useDeepCompareEffectForMaps } from '../../hooks/useDeepCompare';
-
-import mapStyle from './mapStyle';
-
 import { isLatLngLiteral } from '@app/utils/types';
+import { useDeepCompareEffectForMaps } from '../../hooks/useDeepCompare';
+import mapStyle from './mapStyle';
 
 interface MapProps extends google.maps.MapOptions {
   className: string;
@@ -52,9 +49,7 @@ export default function Map({
 
   useEffect(() => {
     if (map) {
-      ['click', 'idle'].forEach((eventName) =>
-        google.maps.event.clearListeners(map, eventName)
-      );
+      ['click', 'idle'].forEach((eventName) => google.maps.event.clearListeners(map, eventName));
 
       if (onClick) {
         map.addListener('click', onClick);
@@ -75,6 +70,8 @@ export default function Map({
           // @ts-expect-error Specific of using the library.
           return cloneElement(child, { map });
         }
+
+        return null;
       })}
     </>
   );

@@ -1,10 +1,8 @@
 import { useQuery } from 'react-query';
-
-import { BottomSheet } from '../../components/BottomSheet';
-
 import { GoogleMap, Loader } from '@app/components';
 import { Address } from '@app/utils/types';
 import { fetchPharmaciesByAddress } from '@app/utils/api';
+import { BottomSheet } from '../../components/BottomSheet';
 
 const PharmaciesMap: React.FC<{ address: Address }> = ({ address }) => {
   const {
@@ -18,7 +16,7 @@ const PharmaciesMap: React.FC<{ address: Address }> = ({ address }) => {
       enabled: !!address.location.lat && !!address.location.lng,
       staleTime: 1000 * 60 * 60,
       cacheTime: 1000 * 60 * 60,
-    }
+    },
   );
 
   if (isLoading) {

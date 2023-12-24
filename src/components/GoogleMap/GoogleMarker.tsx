@@ -21,7 +21,6 @@ export default function GoogleMapsMarker({
     if (marker) {
       marker.setOptions(options);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marker]);
 
   return null;

@@ -1,8 +1,7 @@
 import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { HiChevronUpDown, HiCheckCircle } from 'react-icons/hi2';
-
-import { LanguageKind } from '@app/utils/types';
+import { LANGUAGES } from '@app/utils/types';
 import { useLanguageContext } from '@app/store/LanguageContext';
 
 export default function LanguageSelect() {
@@ -28,14 +27,12 @@ export default function LanguageSelect() {
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              {Object.values(LanguageKind).map((language) => (
+              {Object.values(LANGUAGES).map((language) => (
                 <Listbox.Option
                   key={language}
-                  className={({ active }) =>
-                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                      active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
-                    }`
-                  }
+                  className={({ active }) => `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                    active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                  }`}
                   value={language}
                 >
                   {({ selected }) => (

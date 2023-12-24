@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-
+import React, {
+  createContext, useContext, useEffect, useState,
+} from 'react';
 import { Address } from '@app/utils/types';
 import { useGeolocation } from '@app/hooks/useGeolocation';
 import { INITIAL_ADDRESS } from '@app/utils/contants';

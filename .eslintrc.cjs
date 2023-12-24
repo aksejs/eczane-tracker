@@ -9,19 +9,15 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:import/recommended',
     'plugin:@typescript-eslint/recommended',
-    'eslint-config-prettier',
-    'prettier',
-    'plugin:prettier/recommended',
     'airbnb-base',
     'airbnb/rules/react',
-    'prettier/react',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     project: ['./tsconfig.json'],
   },
-  plugins: ['@typescript-eslint', 'prettier', 'import'],
+  plugins: ['@typescript-eslint', 'import'],
   settings: {
     react: {
       // Tells eslint-plugin-react to automatically detect the version of React to use.
@@ -57,21 +53,22 @@ module.exports = {
     window: true,
   },
   rules: {
-    'prettier/prettier': 'warn',
-    'react/react-in-jsx-scope': 'off',
+    // 'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
-    'jsx-a11y/click-events-have-key-events': 'off',
+    // 'jsx-a11y/click-events-have-key-events': 'off',
     'import/prefer-default-export': 'off',
     'react/require-default-props': 'off',
     'implicit-arrow-linebreak': 'off',
-    'operator-linebreak': 'off',
+    // 'operator-linebreak': 'off',
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
     'import/order': [
       'error',
       {
-        groups: ['builtin', 'external', 'parent', 'sibling', 'index'],
-        'newlines-between': 'always-and-inside-groups',
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        'newlines-between': 'never',
       },
     ],
     'import/extensions': [

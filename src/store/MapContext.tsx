@@ -1,13 +1,17 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import {
+  createContext, useContext, useMemo, useState,
+} from 'react';
 
-export const MapContext = createContext<{
+type MapContextProps = {
   selectedId?: string;
-  handleSetSelectedId: (id: string) => void;
+  handleSetSelectedId: (selectedId: string) => void;
   center?: google.maps.LatLngLiteral;
-  handleSetCenter: (latlng: google.maps.LatLngLiteral) => void;
+  handleSetCenter: (center: google.maps.LatLngLiteral) => void;
   zoom: number;
   handleSetZoom: (zoom: number) => void;
-}>({
+};
+
+export const MapContext = createContext<MapContextProps>({
   selectedId: undefined,
   handleSetSelectedId: () => {},
   center: undefined,
@@ -24,16 +28,16 @@ export const MapContextProvider: React.FC<{
   const [zoom, setZoom] = useState<number>(15);
 
   const api = useMemo(() => {
-    const handleSetZoom = (zoom: number) => {
-      setZoom(zoom);
+    const handleSetZoom = (value: number) => {
+      setZoom(value);
     };
 
-    const handleSetSelectedId = (selectedId: string) => {
-      setSelectedId(selectedId);
+    const handleSetSelectedId = (id: string) => {
+      setSelectedId(id);
     };
 
-    const handleSetCenter = (center: google.maps.LatLngLiteral) => {
-      setCenter(center);
+    const handleSetCenter = (latlng: google.maps.LatLngLiteral) => {
+      setCenter(latlng);
     };
 
     return { handleSetZoom, handleSetSelectedId, handleSetCenter };

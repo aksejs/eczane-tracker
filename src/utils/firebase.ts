@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import type { FirebaseOptions } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
-
 import { FIREBASE_API_KEY } from './contants';
 
 // TODO: Replace the following with your app's Firebase project configuration
@@ -20,11 +19,10 @@ export const db = getFirestore(app);
 export const functions = getFunctions(app, 'europe-west1');
 
 if (
-  window.location.hostname === '127.0.0.1' ||
-  window.location.hostname === 'localhost'
+  window.location.hostname === '127.0.0.1'
+  || window.location.hostname === 'localhost'
 ) {
   connectFunctionsEmulator(functions, 'localhost', 5001);
 }
 
-export const API_URL =
-  'http://127.0.0.1:5001/eczane-tracker/europe-west1/getPharmaciesByAddress';
+export const API_URL = 'http://127.0.0.1:5001/eczane-tracker/europe-west1/getPharmaciesByAddress';

@@ -1,5 +1,4 @@
 import { HiMapPin } from 'react-icons/hi2';
-
 import { useMapContext } from '@app/store/MapContext';
 import { Pharmacy } from '@app/utils/types';
 
@@ -21,7 +20,7 @@ export const Item: React.FC<{
 
   const handleRedirectToGooglemaps = () => {
     window.open(
-      `https://maps.google.com/?daddr=${pharmacy.lat},${pharmacy.lng}`
+      `https://maps.google.com/?daddr=${pharmacy.lat},${pharmacy.lng}`,
     );
   };
 
@@ -29,7 +28,13 @@ export const Item: React.FC<{
     <div className="flex p-4 cursor-pointer" onClick={handleSelectPlaceId}>
       <div onClick={handleRedirectToGooglemaps}>
         <HiMapPin className="h-12 w-12 text-red-600" />
-        {distance && <div>{distanceToKmString(distance)} km</div>}
+        {distance && (
+        <div>
+          {distanceToKmString(distance)}
+          {' '}
+          km
+        </div>
+        )}
       </div>
       <div className="ml-4">
         <div className="text-small font-semibold">{pharmacy.name}</div>

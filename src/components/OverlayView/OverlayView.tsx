@@ -1,6 +1,5 @@
 import { PropsWithChildren, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-
 import { createOverlay } from './Overlay';
 
 type OverlayProps = PropsWithChildren<{

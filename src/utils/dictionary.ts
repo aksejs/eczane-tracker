@@ -1,8 +1,8 @@
-import { LanguageKind } from './types';
+import { LANGUAGES } from './types';
 
 export const DISTANCE_DISCTIONARY = {
-  [LanguageKind.EN]: 'Distance',
-  [LanguageKind.RU]: 'Расстояние',
-  [LanguageKind.TR]: 'Uzaklık',
-  [LanguageKind.UA]: 'Відстань',
+  [LANGUAGES.en]: 'Distance',
+  [LANGUAGES.ru]: 'Расстояние',
+  [LANGUAGES.tr]: 'Uzaklık',
+  [LANGUAGES.ua]: 'Відстань',
 };

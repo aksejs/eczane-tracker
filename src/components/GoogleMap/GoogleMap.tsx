@@ -1,17 +1,12 @@
 import { useEffect, useMemo } from 'react';
 import { Status, Wrapper } from '@googlemaps/react-wrapper';
-
-import { Map } from '../Map';
-
-import { Loader } from '../Loader';
-
-import { CustomMarker } from '../CustomMarker';
-
-import GoogleMapsMarker from './GoogleMarker';
-
 import { GOOGLE_API_KEY } from '@app/utils/contants';
 import { Pharmacy, isLatLngLiteral } from '@app/utils/types';
 import { useMapContext } from '@app/store/MapContext';
+import { Map } from '../Map';
+import { Loader } from '../Loader';
+import { CustomMarker } from '../CustomMarker';
+import GoogleMapsMarker from './GoogleMarker';
 
 const render = (status: Status) => {
   if (status === Status.FAILURE) {
@@ -34,11 +29,12 @@ export default function GoogleMap({
   markers,
   onMarkerClick,
 }: GoogleMapProps) {
-  const { selectedId, center, handleSetCenter, zoom, handleSetZoom } =
-    useMapContext();
+  const {
+    selectedId, center, handleSetCenter, zoom, handleSetZoom,
+  } = useMapContext();
   const filtered = useMemo(
     () => markers?.filter((m) => m.lat && m.lng),
-    [markers]
+    [markers],
   );
 
   const onIdle = (map: google.maps.Map) => {

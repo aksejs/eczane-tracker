@@ -1,9 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
-
-import OverlayView from '../OverlayView';
-
 import { Pharmacy } from '@app/utils/types';
+import { OverlayView } from '../OverlayView';
 
 interface CustomMarkerProps {
   pharmacy: Pharmacy;
@@ -23,11 +21,10 @@ export default function CustomMarker({
   }, [onClick, pharmacy]);
 
   const highLightedStyles = useMemo(
-    () =>
-      highlight
-        ? 'text-black bg-zinc-50 font-bold py-2 px-2.5'
-        : 'bg-zinc-600 py-1.5 px-2 text-white',
-    [highlight]
+    () => (highlight
+      ? 'text-black bg-zinc-50 font-bold py-2 px-2.5'
+      : 'bg-zinc-600 py-1.5 px-2 text-white'),
+    [highlight],
   );
 
   return (
@@ -52,9 +49,12 @@ export default function CustomMarker({
             }}
           >
             <button
+              type="button"
               className={`${highLightedStyles} rounded-full drop-shadow text-xs`}
               onClick={handleClick}
-            >{`${pharmacy.name}`}</button>
+            >
+              {`${pharmacy.name}`}
+            </button>
           </motion.div>
         </OverlayView>
       )}

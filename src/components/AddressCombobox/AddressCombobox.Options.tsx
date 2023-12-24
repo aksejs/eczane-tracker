@@ -1,7 +1,6 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
 import { HiCheckCircle } from 'react-icons/hi2';
-
 import type { Prediction } from '@app/utils/types';
 
 export function Options({
@@ -30,11 +29,9 @@ export function Options({
           predictions?.map((prediction) => (
             <Combobox.Option
               key={prediction.placeId}
-              className={({ active }) =>
-                `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                  active ? 'bg-teal-600 text-white' : 'text-gray-900'
-                }`
-              }
+              className={({ active }) => `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                active ? 'bg-teal-600 text-white' : 'text-gray-900'
+              }`}
               value={prediction}
             >
               {({ selected, active }) => (
