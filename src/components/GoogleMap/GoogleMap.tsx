@@ -1,30 +1,26 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
-import { Status, Wrapper } from '@googlemaps/react-wrapper'
-
-import { GOOGLE_API_KEY } from '@app/utils/contants'
-import { Pharmacy, isLatLngLiteral } from '@app/utils/types'
-import { AddressContext } from '@app/store/AddressContext'
-
-import GoogleMapsMarker from './GoogleMarker'
-import DistanceMatrixService from './DistanceMatrixService'
-import { Map } from '../Map'
-import { Loader } from '../Loader'
-import { CustomMarker } from '../CustomMarker'
+import { useEffect, useMemo } from 'react';
+import { Status, Wrapper } from '@googlemaps/react-wrapper';
+import { GOOGLE_API_KEY } from '@app/utils/contants';
+import { Pharmacy, isLatLngLiteral } from '@app/utils/types';
+import { useMapContext } from '@app/store/MapContext';
+import { Map } from '../Map';
+import { Loader } from '../Loader';
+import { CustomMarker } from '../CustomMarker';
+import GoogleMapsMarker from './GoogleMarker';
 
 const render = (status: Status) => {
   if (status === Status.FAILURE) {
-    return <p>failed</p>
+    return <p>failed</p>;
   }
 
-  return <Loader />
-}
+  return <Loader />;
+};
 
 interface GoogleMapProps {
-  onClick?: (e: google.maps.MapMouseEvent) => void
-  onMarkerClick: (payload: Pharmacy) => void
-  markers?: Pharmacy[]
-  highlightedPharmacy: Pharmacy | null
-  latLng: google.maps.LatLngLiteral
+  onClick?: () => void;
+  onMarkerClick: () => void;
+  markers?: Pharmacy[];
+  latLng: google.maps.LatLngLiteral;
 }
 
 export default function GoogleMap({
@@ -32,53 +28,34 @@ export default function GoogleMap({
   latLng,
   markers,
   onMarkerClick,
-  highlightedPharmacy,
 }: GoogleMapProps) {
-  const { setDistance } = useContext(AddressContext)
-  const [center, setCenter] = useState<google.maps.LatLngLiteral>(latLng)
-  const [zoom, setZoom] = useState<number>(15)
-  const filtered = useMemo(() => {
-    return markers?.filter((m) => m.lat && m.lng)
-  }, [markers])
-
-  const highlightedPharmacyLatLng = highlightedPharmacy && {
-    lat: +highlightedPharmacy.lat,
-    lng: +highlightedPharmacy.lng,
-  }
+  const {
+    selectedId, center, handleSetCenter, zoom, handleSetZoom,
+  } = useMapContext();
+  const filtered = useMemo(
+    () => markers?.filter((m) => m.lat && m.lng),
+    [markers],
+  );
 
   const onIdle = (map: google.maps.Map) => {
-    setZoom(map.getZoom()!)
+    handleSetZoom(map.getZoom()!);
 
-    const nextCenter = map.getCenter()
+    const nextCenter = map.getCenter();
 
     if (nextCenter) {
-      setCenter(nextCenter.toJSON())
+      handleSetCenter(nextCenter.toJSON());
     }
-  }
+  };
 
   useEffect(() => {
     if (isLatLngLiteral(latLng)) {
-      setCenter(latLng)
+      handleSetCenter(latLng);
     }
-  }, [latLng])
+  }, [latLng]);
 
   return (
     <div className="flex h-[94%] justify-center">
       <Wrapper apiKey={GOOGLE_API_KEY} render={render}>
-        {highlightedPharmacyLatLng && latLng && (
-          <DistanceMatrixService
-            options={{
-              origins: [latLng],
-              destinations: [highlightedPharmacyLatLng],
-              travelMode: google.maps.TravelMode.WALKING,
-            }}
-            callback={(res) => {
-              if (res) {
-                setDistance(res?.rows[0].elements[0].distance)
-              }
-            }}
-          />
-        )}
         <Map
           className="grow h-screen"
           gestureHandling="greedy"
@@ -94,17 +71,17 @@ export default function GoogleMap({
           zoomControl={false}
           clickableIcons={false}
         >
-          <GoogleMapsMarker key={latLng?.lat} position={latLng} />
+          <GoogleMapsMarker key={latLng.lat} position={latLng} />
           {filtered?.map((pharmacy) => (
             <CustomMarker
               key={pharmacy.id}
               pharmacy={pharmacy}
               onClick={onMarkerClick}
-              highlight={pharmacy.id === highlightedPharmacy?.id}
+              highlight={pharmacy.id === selectedId}
             />
           ))}
         </Map>
       </Wrapper>
     </div>
-  )
+  );
 }

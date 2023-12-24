@@ -1,4 +1,7 @@
 {
-    "editor.formatOnSave": true,
-    "javascript.suggestionActions.enabled": false
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "javascript.suggestionActions.enabled": false
 }

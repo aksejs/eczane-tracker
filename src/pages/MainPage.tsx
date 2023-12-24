@@ -1,30 +1,30 @@
-import { useContext } from 'react'
+import React from 'react';
+import { useAddressContext } from '@app/store/AddressContext';
+import { PageWrapper, Loader } from '@app/components';
+import { LanguageSelect, PharmaciesMap, SearchAddress } from '@app/features';
 
-import { AddressContext } from '@app/store/AddressContext'
-import { Pharmacies } from '@app/components/Phamracies'
-import { AddressField, PageWrapper, Loader } from '@app/components'
-import { LanguageSelect } from '@app/components/LanguageSelect'
-
-export function MainPage() {
-  const { address, latLng, distance, loading } = useContext(AddressContext)
+export const MainPage: React.FC = () => {
+  const { address, loading } = useAddressContext();
 
   if (loading || !address) {
     return (
       <PageWrapper>
         <Loader />
       </PageWrapper>
-    )
+    );
   }
 
   return (
     <PageWrapper>
       <div className="h-[6%] min-h-[52px] flex items-center">
-        <AddressField defaultAddress={address} />
+        <SearchAddress defaultAddress={address} />
         <LanguageSelect />
       </div>
-      {latLng && (
-        <Pharmacies address={address} location={latLng} distance={distance} />
+      {address.location ? (
+        <PharmaciesMap address={address} />
+      ) : (
+        <div>No location</div>
       )}
     </PageWrapper>
-  )
-}
+  );
+};

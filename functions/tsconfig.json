@@ -9,7 +9,8 @@
     "strict": true,
     "target": "es2017",
     "skipLibCheck": true,
-    "types": []
+    "types": [],
+    "resolveJsonModule": true
   },
   "compileOnSave": true,
   "include": ["src"]

@@ -1,101 +1,71 @@
-import React, { createContext, useMemo, useState } from 'react'
+import React, {
+  createContext, useContext, useEffect, useState,
+} from 'react';
+import { Address } from '@app/utils/types';
+import { useGeolocation } from '@app/hooks/useGeolocation';
+import { INITIAL_ADDRESS } from '@app/utils/contants';
+import { geocodeAddress } from '@app/utils/api';
 
-import { Address, isLatLngLiteral } from '@app/utils/types'
-import { useAddressCallable } from '@app/hooks/useAddressCallable'
+type AddressContextProps = {
+  address?: Address;
+  loading: boolean;
+  error: boolean;
+  geolocationDenied: boolean;
+  setAddress: (address: Address) => void;
+};
 
-export interface Location {
-  lat: number
-  lng: number
-}
-
-const INITIAL_ADDRESS: Address = {
-  fullAddress:
-    'Sultan Ahmet, Ayasofya Meydanı No:1, 34122 Fatih/İstanbul, Turkey',
-  district: 'fatih',
-}
-
-export const AddressContext = createContext<{
-  address?: Address
-  latLng?: google.maps.LatLngLiteral
-  distance?: string
-  loading: boolean
-  error: boolean
-  geolocationDenied: boolean
-  setDistance: (distanceValue: google.maps.Distance) => void
-  setAddress: (address: {
-    latLng?: google.maps.LatLngLiteral
-    fullAddress?: string
-    district?: string
-  }) => void
-  setLatLng: (literal: google.maps.LatLngLiteral) => void
-}>({
-  setDistance: () => {},
+export const AddressContext = createContext<AddressContextProps>({
   setAddress: () => {},
-  setLatLng: () => {},
   loading: true,
   error: false,
   geolocationDenied: false,
-})
+});
 
 export const AddressContextProvider: React.FC<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }> = ({ children }) => {
-  const { possibleAddress, geolocation, loading, error, geolocationDenied } =
-    useAddressCallable()
-  const [state, setState] = useState<Address>(INITIAL_ADDRESS)
-  const [latLng, setLatLng] = useState<google.maps.LatLngLiteral>()
-  const [distance, setDistance] = useState<string>()
+  const geolocation = useGeolocation();
+  const [state, setState] = useState<Address>();
 
-  const latLngMemo = useMemo(() => {
-    const literal = { lat: geolocation.latitude, lng: geolocation.longitude }
-    if (isLatLngLiteral(literal)) {
-      return literal
+  useEffect(() => {
+    if (geolocation.latitude) {
+      geocodeAddress({
+        latlng: `${geolocation.latitude},${geolocation.longitude}`,
+      }).then((data) => {
+        setState({
+          fullAddress: data.fullAddress,
+          city: data.city,
+          district: data.district,
+          placeId: data.placeId,
+          location: data.location,
+        });
+      });
     }
-  }, [geolocation.latitude, geolocation.longitude])
+  }, [geolocation.latitude]);
+
+  useEffect(() => {
+    if (geolocation.denied) {
+      setState(INITIAL_ADDRESS);
+    }
+  }, [geolocation.denied]);
 
   const handleSetAddress = (address: Address) => {
-    setState((oldState) => ({ ...oldState, ...address }))
-  }
+    setState(address);
+  };
 
-  const handleSetDistance = (distanceValue: google.maps.Distance) => {
-    setDistance(distanceValue.text)
-  }
-
-  const handleSetLatLng = (literal: google.maps.LatLngLiteral) => {
-    setLatLng(literal)
-  }
-
-  const address: Address | undefined = useMemo(() => {
-    if (possibleAddress) {
-      return {
-        fullAddress: possibleAddress.fullAddress,
-        district: possibleAddress.district,
-        placeId: possibleAddress.placeId,
-      }
-    }
-
-    return {
-      fullAddress: state.fullAddress,
-      district: state.district,
-      placeId: state.placeId,
-    }
-  }, [state, possibleAddress])
+  const addressContextValue: AddressContextProps = {
+    address: state,
+    loading: geolocation.loading || false,
+    error: false,
+    geolocationDenied: Boolean(geolocation.error),
+    setAddress: handleSetAddress,
+  };
 
   return (
-    <AddressContext.Provider
-      value={{
-        address: address,
-        latLng: latLng || latLngMemo,
-        distance: distance,
-        loading,
-        error,
-        geolocationDenied,
-        setDistance: handleSetDistance,
-        setAddress: handleSetAddress,
-        setLatLng: handleSetLatLng,
-      }}
-    >
+    <AddressContext.Provider value={addressContextValue}>
       {children}
     </AddressContext.Provider>
-  )
-}
+  );
+};
+
+export const useAddressContext = () => useContext(AddressContext);
