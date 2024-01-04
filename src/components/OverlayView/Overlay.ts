@@ -43,5 +43,6 @@ export function createOverlay(
       }
     }
   }
+
   return new Overlay(container, pane, position);
 }

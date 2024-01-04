@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ImStarFull, ImStarHalf } from 'react-icons/im';
 import { LanguageContext } from '@app/store/LanguageContext';
 import defaultImage from '@app/assets/eczane-default.jpg';
-import { DICTIONARY } from '@app/utils/dictionary';
+import { DICTIONARY } from '@app/utils/contants';
 
 type CardProps = {
   name: string;
